@@ -2,7 +2,7 @@
   "name": "Rockwell I/O Reference Central",
   "short_name": "AB IO",
   "description": "Referência técnica de módulos de I/O Rockwell Automation",
-  "start_url": "/",
+  "start_url": "/ABIO/",
   "display": "standalone",
   "background_color": "#f4f5f6",
   "theme_color": "#2d3142",
