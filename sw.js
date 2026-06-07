@@ -4,7 +4,7 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  'https://raw.githubusercontent.com/vhmol1/AbDrives/refs/heads/main/ROK-331842c1.png'
+  'https://raw.githubusercontent.com/vhmol1/ABIO/refs/heads/main/Logo_IO.png'
 ];
 
 self.addEventListener('install', event => {
