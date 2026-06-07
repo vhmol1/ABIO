@@ -1,6 +1,6 @@
 {
   "name": "Rockwell I/O Reference Central",
-  "short_name": "AB IO",
+  "short_name": "RA IO",
   "description": "Referência técnica de módulos de I/O Rockwell Automation",
   "start_url": "index.html",
   "display": "standalone",
