@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ab-io-v2';
+const CACHE_NAME = 'ab-io-v3';
 const ASSETS = [
   '/',
   '/index.html',
