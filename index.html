@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rockwell Automation - I/O Reference Central</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root {
+  --primary-color: #cd1a2b;
+  --dark-color: #2d3142;
+  --light-bg: #f4f5f6;
+  --card-bg: #ffffff;
+  --border-color: #e1e4e6;
+  --text-main: #333333;
+  --text-muted: #666666;
+}
+[data-theme="dark"] {
+  --light-bg: #1a1d27;
+  --card-bg: #23263a;
+  --border-color: #383c52;
+  --text-main: #e2e4ef;
+  --text-muted: #9096b0;
+  --dark-color: #12141f;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background-color: var(--light-bg); color: var(--text-main); line-height: 1.6; padding: 20px; transition: background 0.3s, color 0.3s; }
+
+/* ── HEADER ── */
+header {
+  background-color: var(--dark-color);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-logo {
+  background: var(--primary-color);
+  color: white;
+  font-weight: 900;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  line-height: 1.3;
+  text-align: center;
+}
+.header-title h1 { font-size: 22px; font-weight: 600; }
+.header-title p  { font-size: 13px; color: #9ba3b8; margin-top: 2px; }
+.header-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+.header-btn {
+  background-color: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+}
+.header-btn:hover { background-color: rgba(255,255,255,0.2); }
+.header-btn.accent { background-color: var(--primary-color); border-color: var(--primary-color); }
+.header-btn.accent:hover { background-color: #a5121e; }
+
+/* ── SEARCH ── */
+.search-container {
+  background-color: var(--card-bg);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  transition: background 0.3s;
+}
+.search-box, .filter-box { flex: 1; min-width: 200px; }
+label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: var(--text-muted); }
+input[type="text"], select {
+  width: 100%; padding: 10px; border: 1px solid var(--border-color);
+  border-radius: 4px; font-size: 14px; outline: none;
+  background: var(--light-bg); color: var(--text-main);
+  transition: border-color 0.2s, background 0.3s;
+}
+input[type="text"]:focus, select:focus { border-color: var(--primary-color); }
+
+/* ── GRID ── */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+
+/* ── CARD ── */
+.card {
+  background-color: var(--card-bg);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+  display: flex; flex-direction: column;
+  transition: transform 0.2s, background 0.3s;
+  overflow: hidden;
+}
+.card:hover { transform: translateY(-2px); }
+.card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.module-code { font-size: 17px; font-weight: bold; color: var(--primary-color); }
+
+.family-tag { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+.tag-clx-ac  { background: #fde8ea; color: #8b0000; }
+.tag-clx-dc  { background: #e6f4ec; color: #1a6e3c; }
+.tag-clx-out { background: #e6eef9; color: #1a4e8c; }
+.tag-clx-sp  { background: #f3e8fb; color: #5a1a7a; }
+
+.module-name  { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+.module-badge { display: inline-block; background: var(--light-bg); color: var(--text-muted); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-bottom: 10px; border: 1px solid var(--border-color); }
+
+/* Image */
+.module-image-wrap {
+  width: 100%; background: var(--light-bg); border-radius: 4px; margin-bottom: 4px;
+  overflow: hidden; position: relative; min-height: 150px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border-color);
+}
+.module-image-wrap img { width: 100%; max-height: 210px; object-fit: contain; display: block; }
+.image-placeholder {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; color: var(--text-muted); font-size: 12px; padding: 20px; text-align: center; min-height: 150px;
+  opacity: 0.6;
+}
+.image-caption { font-size: 11px; color: var(--text-muted); text-align: center; padding: 2px 8px 10px; font-style: italic; }
+
+.btn-fullscreen {
+  position: absolute; bottom: 8px; right: 8px;
+  background: rgba(45,49,66,0.82); color: #fff; border: none; border-radius: 4px;
+  padding: 5px 10px; font-size: 12px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  backdrop-filter: blur(2px); transition: background 0.2s; z-index: 2;
+}
+.btn-fullscreen:hover { background: rgba(205,26,43,0.9); }
+
+/* Specs */
+.section-divider { display: flex; align-items: center; gap: 8px; margin: 6px 0 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); }
+.section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
+
+.specs-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 12.5px; }
+.specs-table tr:nth-child(even) td { background: var(--light-bg); }
+.specs-table td { padding: 5px 8px; border: 1px solid var(--border-color); vertical-align: top; }
+.specs-table td:first-child { font-weight: 600; color: var(--text-main); width: 44%; }
+
+/* Faults */
+.faults-title { font-weight: 600; font-size: 12px; color: #2a6f97; margin-bottom: 5px; border-bottom: 1px dashed var(--border-color); padding-bottom: 3px; }
+.fault-item { display: flex; gap: 7px; margin-bottom: 5px; font-size: 12px; }
+.fault-badge { background: #fff0f0; color: var(--primary-color); border: 1px solid #f5c0c4; border-radius: 3px; padding: 1px 6px; font-weight: 700; white-space: nowrap; font-size: 11px; height: fit-content; margin-top: 1px; }
+[data-theme="dark"] .fault-badge { background: #3a1a1f; border-color: #7a2030; }
+
+.no-results { grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 16px; }
+
+/* ── MODAL (same pattern as AbDrives) ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 9000;
+  background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+  background: var(--card-bg); border-radius: 8px; padding: 28px;
+  max-width: 480px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  position: relative; color: var(--text-main);
+}
+.modal-close { position: absolute; top: 12px; right: 14px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); line-height: 1; }
+.modal-close:hover { color: var(--primary-color); }
+.modal-title { font-size: 18px; font-weight: 700; color: var(--primary-color); margin-bottom: 4px; }
+.modal-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+.modal-section { margin-bottom: 14px; }
+.modal-section-title { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 6px; }
+.modal-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.modal-table td { padding: 5px 8px; border: 1px solid var(--border-color); }
+.modal-table tr:nth-child(even) td { background: var(--light-bg); }
+.modal-table td:first-child { font-weight: 600; width: 46%; }
+
+/* ── LIGHTBOX ── */
+#lightbox { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.94); flex-direction: column; }
+#lightbox.active { display: flex; }
+.lb-topbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: rgba(0,0,0,0.55); flex-shrink: 0; gap: 10px; }
+.lb-title { color: #e0e0e0; font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.lb-controls { display: flex; gap: 6px; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
+.lb-btn { background: rgba(255,255,255,0.12); color: #fff; border: none; border-radius: 4px; padding: 6px 11px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: background 0.2s; white-space: nowrap; }
+.lb-btn:hover { background: rgba(255,255,255,0.25); }
+.lb-btn.lb-close:hover { background: rgba(205,26,43,0.85); }
+.lb-zoom-label { color: #aaa; font-size: 12px; min-width: 40px; text-align: center; }
+.lb-viewport { flex: 1; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; cursor: grab; user-select: none; }
+.lb-viewport.grabbing { cursor: grabbing; }
+#lb-img { max-width: none; max-height: none; transform-origin: 0 0; pointer-events: none; display: block; position: absolute; top: 0; left: 0; }
+.lb-hint { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.55); color: #ccc; font-size: 11px; padding: 4px 14px; border-radius: 20px; pointer-events: none; transition: opacity 1s; white-space: nowrap; }
+.lb-hint.hidden { opacity: 0; }
+
+@media (max-width: 600px) {
+  header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .header-actions { width: 100%; }
+  .header-btn { flex: 1; justify-content: center; }
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-left">
+    <div class="header-logo">ROCKWELL<br>AUTOMATION</div>
+    <div class="header-title">
+      <h1 id="title-text">Central de I/O</h1>
+      <p id="subtitle-text">Referência Técnica: Ligação, Bornes, Especificações e Diagnósticos</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="header-btn" id="darkToggle" onclick="toggleDark()" title="Alternar modo escuro">
+      <svg id="dark-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span id="dark-label">Modo Escuro</span>
+    </button>
+    <button class="header-btn accent" id="langToggle" onclick="toggleLanguage()">Switch to English</button>
+  </div>
+</header>
+
+<!-- ── SEARCH ── -->
+<div class="search-container">
+  <div class="search-box">
+    <label id="label-search" for="searchInput">Pesquisar Módulo ou Palavra-chave:</label>
+    <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Ex: 1756-IB16, OA8, sourcing, AC 120V...">
+  </div>
+  <div class="filter-box">
+    <label id="label-family" for="familyFilter">Filtrar por Família:</label>
+    <select id="familyFilter" onchange="filterData()">
+      <option value="all">Todas as Famílias</option>
+      <option value="clx">ControlLogix 1756</option>
+      <option value="cplx">CompactLogix 1769</option>
+      <option value="point">POINT I/O 1734</option>
+      <option value="flex">FLEX I/O 1794</option>
+    </select>
+  </div>
+  <div class="filter-box">
+    <label id="label-type" for="typeFilter">Filtrar por Tipo:</label>
+    <select id="typeFilter" onchange="filterData()">
+      <option value="all">Todos os Tipos</option>
+      <option value="DI-AC">Entrada Digital AC</option>
+      <option value="DI-DC">Entrada Digital DC</option>
+      <option value="DO-AC">Saída Digital AC</option>
+      <option value="DO-DC">Saída Digital DC</option>
+      <option value="DO-Contact">Saída Contato</option>
+      <option value="AI">Entrada Analógica</option>
+      <option value="AO">Saída Analógica</option>
+      <option value="Adapter">Adaptador</option>
+    </select>
+  </div>
+</div>
+
+<div class="grid" id="ioGrid"></div>
+
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-subtitle" id="modal-subtitle"></div>
+    <div class="modal-section">
+      <div class="modal-section-title" id="modal-spec-title">Especificações</div>
+      <table class="modal-table" id="modal-specs-table"></table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title" id="modal-fault-title">Falhas / Diagnósticos</div>
+      <div id="modal-faults"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── LIGHTBOX ── -->
+<div id="lightbox">
+  <div class="lb-topbar">
+    <span class="lb-title" id="lb-title"></span>
+    <div class="lb-controls">
+      <button class="lb-btn" id="btn-zoom-out"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      <span class="lb-zoom-label" id="lb-zoom-label">100%</span>
+      <button class="lb-btn" id="btn-zoom-in"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      <button class="lb-btn" id="btn-lb-reset">Reset</button>
+      <button class="lb-btn lb-close" id="btn-lb-close">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Fechar
+      </button>
+    </div>
+  </div>
+  <div class="lb-viewport" id="lb-viewport">
+    <img id="lb-img" src="" alt="">
+    <div class="lb-hint" id="lb-hint">Scroll para zoom &middot; Arraste para mover &middot; Pinch no celular</div>
+  </div>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────
+var currentLang = 'pt';
+
+// ── UI Texts ──────────────────────────────────
+var T = {
+  pt: {
+    title:'Central de I/O', subtitle:'Referência Técnica: Ligação, Bornes, Especificações e Diagnósticos',
+    langBtn:'Switch to English', darkOn:'Modo Escuro', darkOff:'Modo Claro',
+    searchLabel:'Pesquisar Módulo ou Palavra-chave:', searchPh:'Ex: 1756-IB16, OA8, sourcing, AC 120V...',
+    famLabel:'Filtrar por Família:', famAll:'Todas as Famílias',
+    typeLabel:'Filtrar por Tipo:', typeAll:'Todos os Tipos',
+    specsTitle:'Especificações Técnicas', faultsTitle:'Falhas / Diagnósticos',
+    imgCaption:'Exemplo de ligação — ', noImg:'Adicione a imagem no repositório GitHub',
+    fullscreen:'Tela Cheia', noResults:'Nenhum módulo encontrado.',
+    modalSpec:'Especificações', modalFault:'Falhas / Diagnósticos'
+  },
+  en: {
+    title:'I/O Reference Central', subtitle:'Technical Reference: Wiring, Terminals, Specifications & Diagnostics',
+    langBtn:'Mudar para Português', darkOn:'Dark Mode', darkOff:'Light Mode',
+    searchLabel:'Search Module or Keyword:', searchPh:'E.g., 1756-IB16, OA8, sourcing, AC 120V...',
+    famLabel:'Filter by Family:', famAll:'All Families',
+    typeLabel:'Filter by Type:', typeAll:'All Types',
+    specsTitle:'Technical Specifications', faultsTitle:'Faults / Diagnostics',
+    imgCaption:'Wiring example — ', noImg:'Add the image to the GitHub repository',
+    fullscreen:'Full Screen', noResults:'No modules found.',
+    modalSpec:'Specifications', modalFault:'Faults / Diagnostics'
+  }
+};
+
+// ── Family config ─────────────────────────────
+var FAM = {
+  clx:   { label:'ControlLogix 1756' },
+  cplx:  { label:'CompactLogix 1769' },
+  point: { label:'POINT I/O 1734'    },
+  flex:  { label:'FLEX I/O 1794'     }
+};
+
+// tag color by signal type
+function tagClass(type) {
+  if (type.indexOf('DI-AC')===0 || type.indexOf('DO-AC')===0) return 'tag-clx-ac';
+  if (type.indexOf('DO-Contact')===0) return 'tag-clx-sp';
+  if (type.indexOf('DI-DC')===0) return 'tag-clx-dc';
+  if (type.indexOf('DO-DC')===0) return 'tag-clx-out';
+  if (type==='AI') return 'tag-clx-dc';
+  if (type==='AO') return 'tag-clx-out';
+  return 'tag-clx-sp';
+}
+
+// ── DATA — ControlLogix 1756 (all modules from manual UM058K) ─────────────
+var ioData = [
+
+// ─── AC INPUTS ───────────────────────────────────────────────
+{catNum:'1756-IA8D', family:'clx', type:'DI-AC',
+ name:{pt:'Entrada AC Diagnóstica 8 pontos — 79…132V CA',en:'8-Point Diagnostic AC Input — 79…132V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IA8D',en:'1756-IA8D wiring'},
+ specs:{
+  pt:[['Pontos','8 entradas isoladas por grupo (2 grupos)'],['Tensão nominal','100/120V CA'],['Faixa de tensão','79 … 132V CA'],['Frequência','47 … 63 Hz'],['Corrente ON (mín.)','5 mA @ 79V CA'],['Diagnóstico','Fio aberto, perda de campo por grupo'],['LED','ST (estado) + FLT (falha) por canal'],['Borne recomendado','1756-TBNH (20 pinos)'],['IFM compatível','1492-IFM20D120 / 1492-IFM20D120N']],
+  en:[['Points','8 isolated inputs (2 groups)'],['Nominal voltage','100/120V AC'],['Voltage range','79 … 132V AC'],['Frequency','47 … 63 Hz'],['ON current (min)','5 mA @ 79V AC'],['Diagnostics','Open-wire, field power loss per group'],['LED','ST (state) + FLT (fault) per channel'],['RTB','1756-TBNH (20-pin)'],['Compatible IFM','1492-IFM20D120 / 1492-IFM20D120N']]},
+ faults:[
+  {code:'FLT LED Aceso', desc:{pt:'Canal em falha — verificar abertura de fio ou fusível',en:'Channel fault — check for open wire or blown fuse'}},
+  {code:'Loss of Field Power', desc:{pt:'Tensão CA ausente em grupo — verificar alimentação L1/L2',en:'AC voltage missing on group — check L1/L2 supply'}},
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane — verificar slot e rack',en:'Backplane comms loss — check slot and rack'}}
+ ]},
+
+{catNum:'1756-IA16 / IA16K', family:'clx', type:'DI-AC',
+ name:{pt:'Entrada AC 16 pontos — 74…132V CA',en:'16-Point AC Input — 74…132V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IA16',en:'1756-IA16 wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas (2 grupos de 8)'],['Tensão nominal','100/120V CA'],['Faixa de tensão','74 … 132V CA'],['Frequência','47 … 63 Hz'],['Corrente ON (mín.)','5 mA @ 74V CA'],['Borne recomendado','1756-TBNH (20 pinos)'],['IFM compatível','1492-IFM20D120 / 1492-IFM20F-3'],['Variante K','Conformal coat para ambientes corrosivos']],
+  en:[['Points','16 inputs (2 groups of 8)'],['Nominal voltage','100/120V AC'],['Voltage range','74 … 132V AC'],['Frequency','47 … 63 Hz'],['ON current (min)','5 mA @ 74V AC'],['RTB','1756-TBNH (20-pin)'],['Compatible IFM','1492-IFM20D120 / 1492-IFM20F-3'],['K variant','Conformal coat for corrosive environments']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}},
+  {code:'Module Fault', desc:{pt:'Verificar keying eletrônico e revisão do projeto Studio 5000',en:'Check electronic keying and Studio 5000 project'}}
+ ]},
+
+{catNum:'1756-IA16I / IA16IK', family:'clx', type:'DI-AC',
+ name:{pt:'Entrada AC Isolada 16 pontos — 79…132V CA',en:'16-Point Isolated AC Input — 79…132V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IA16I',en:'1756-IA16I wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas individualmente isoladas'],['Tensão nominal','100/120V CA'],['Faixa de tensão','79 … 132V CA'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40DS120A-4 / 1492-IFM40F-FSA-4'],['Jumper de ligação','1756-JMPR (cortar no comprimento)']],
+  en:[['Points','16 individually isolated inputs'],['Nominal voltage','100/120V AC'],['Voltage range','79 … 132V AC'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40DS120A-4 / 1492-IFM40F-FSA-4'],['Jumper bar','1756-JMPR (cut to length)']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-IA32 / IA32K', family:'clx', type:'DI-AC',
+ name:{pt:'Entrada AC 32 pontos — 74…132V CA',en:'32-Point AC Input — 74…132V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IA32',en:'1756-IA32 wiring'},
+ specs:{
+  pt:[['Pontos','32 entradas (2 grupos de 16)'],['Tensão nominal','100/120V CA'],['Faixa de tensão','74 … 132V CA'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40F / 1492-IFM40F-2'],['Variante K','Conformal coat']],
+  en:[['Points','32 inputs (2 groups of 16)'],['Nominal voltage','100/120V AC'],['Voltage range','74 … 132V AC'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40F / 1492-IFM40F-2'],['K variant','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+// ─── DC INPUTS ────────────────────────────────────────────────
+{catNum:'1756-IB16 / IB16K / IB16XT', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada DC 16 pontos — 10…31,2V CC sinking',en:'16-Point DC Input — 10…31.2V DC Sinking'},
+ image:null, imageAlt:{pt:'Ligação 1756-IB16',en:'1756-IB16 wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas sinking (2 grupos de 8)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 31,2V CC'],['Corrente ON (mín.)','2 mA @ 10V'],['Corrente OFF (máx.)','1,5 mA'],['Borne recomendado','1756-TBNH (20 pinos)'],['IFM compatível','1492-IFM20D24 / 1492-IFM20D24N'],['Variante XT','Conformal coat — atmosfera corrosiva']],
+  en:[['Points','16 sinking inputs (2 groups of 8)'],['Nominal voltage','24V DC'],['Voltage range','10 … 31.2V DC'],['ON current (min)','2 mA @ 10V'],['OFF current (max)','1.5 mA'],['RTB','1756-TBNH (20-pin)'],['Compatible IFM','1492-IFM20D24 / 1492-IFM20D24N'],['XT variant','Conformal coat — corrosive atmosphere']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane — verificar slot e rack',en:'Backplane comms loss — check slot and rack'}},
+  {code:'Module Fault', desc:{pt:'Verificar keying eletrônico no Studio 5000',en:'Check electronic keying in Studio 5000'}}
+ ]},
+
+{catNum:'1756-IB16D / IB16DK', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada DC Diagnóstica 16 pontos — 10…30V CC',en:'16-Point DC Diagnostic Input — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IB16D',en:'1756-IB16D wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas diagnósticas (4 grupos de 4)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Diagnóstico','Fio aberto por canal (resistor de leakage necessário)'],['Resistor de leakage','15 kΩ / 1/4W para 24V CC'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40F-F24AD-4 / 1492-IFM40F-FS24A-4']],
+  en:[['Points','16 diagnostic inputs (4 groups of 4)'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Diagnostics','Open-wire per channel (leakage resistor required)'],['Leakage resistor','15 kΩ / 1/4W for 24V DC'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40F-F24AD-4 / 1492-IFM40F-FS24A-4']]},
+ faults:[
+  {code:'Open Wire (FLT)', desc:{pt:'Fio aberto detectado — verificar resistor de leakage e fiação',en:'Open wire detected — check leakage resistor and wiring'}},
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-IB16I / IB16IK', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada DC Isolada 16 pontos — 10…30V CC',en:'16-Point Isolated DC Input — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IB16I',en:'1756-IB16I wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas individualmente isoladas'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Ligação','Sinking ou sourcing (por jumper)'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40F / 1492-IFM40DS24A-4'],['Jumper de ligação','1756-JMPR']],
+  en:[['Points','16 individually isolated inputs'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Wiring','Sinking or sourcing (per jumper)'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40F / 1492-IFM40DS24A-4'],['Jumper bar','1756-JMPR']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-IB16IF / IB16IFK', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada DC Rápida Isolada 16 pontos — 10…30V CC',en:'16-Point Isolated Fast DC Input — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IB16IF',en:'1756-IB16IF wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas isoladas rápidas (peer control)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Tempo de resposta','< 50 µs (fast response)'],['Ligação','Sinking ou sourcing'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40F / 1492-IFM40DS24A-4']],
+  en:[['Points','16 isolated fast inputs (peer control)'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Response time','< 50 µs (fast response)'],['Wiring','Sinking or sourcing'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40F / 1492-IFM40DS24A-4']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}},
+  {code:'Peer Fault', desc:{pt:'Falha de comunicação peer-to-peer — verificar configuração de produção de dados',en:'Peer-to-peer communication fault — check data production config'}}
+ ]},
+
+{catNum:'1756-IB32 / IB32K / IB32XT', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada DC 32 pontos — 10…31,2V CC sinking',en:'32-Point DC Input — 10…31.2V DC Sinking'},
+ image:null, imageAlt:{pt:'Ligação 1756-IB32',en:'1756-IB32 wiring'},
+ specs:{
+  pt:[['Pontos','32 entradas sinking (2 grupos de 16)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 31,2V CC'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40F / 1492-IFM40D24'],['Variante XT','Conformal coat']],
+  en:[['Points','32 sinking inputs (2 groups of 16)'],['Nominal voltage','24V DC'],['Voltage range','10 … 31.2V DC'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40F / 1492-IFM40D24'],['XT variant','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-IC16', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada DC 16 pontos — 30…60V CC',en:'16-Point DC Input — 30…60V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IC16',en:'1756-IC16 wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas (2 grupos de 8)'],['Tensão nominal','48V CC'],['Faixa de tensão','30 … 60V CC'],['Borne recomendado','1756-TBNH (20 pinos)'],['Aplicação típica','Sistemas com fonte 48V DC']],
+  en:[['Points','16 inputs (2 groups of 8)'],['Nominal voltage','48V DC'],['Voltage range','30 … 60V DC'],['RTB','1756-TBNH (20-pin)'],['Typical application','48V DC power systems']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-IG16 / IG16K', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada TTL 16 pontos — 5V CC (Transistor-Transistor Logic)',en:'16-Point TTL Input — 5V DC (Transistor-Transistor Logic)'},
+ image:null, imageAlt:{pt:'Ligação 1756-IG16',en:'1756-IG16 wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas TTL (2 grupos de 8)'],['Tensão nominal','5V CC'],['Nível lógico HIGH','≥ 2,0V'],['Nível lógico LOW','≤ 0,8V'],['Circuito','74HCT14 Schmitt trigger'],['Borne recomendado','1756-TBNH (20 pinos)'],['Sem proteção de polaridade inversa','Atenção no cabeamento!']],
+  en:[['Points','16 TTL inputs (2 groups of 8)'],['Nominal voltage','5V DC'],['HIGH logic level','≥ 2.0V'],['LOW logic level','≤ 0.8V'],['Circuit','74HCT14 Schmitt trigger'],['RTB','1756-TBNH (20-pin)'],['No reverse polarity protection','Take care in wiring!']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}},
+  {code:'Damage Risk', desc:{pt:'Sem proteção de polaridade inversa — verificar polaridade antes de energizar',en:'No reverse polarity protection — verify polarity before energizing'}}
+ ]},
+
+{catNum:'1756-IH16I / IH16IK', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada DC Isolada 16 pontos — 90…146V CC',en:'16-Point Isolated DC Input — 90…146V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IH16I',en:'1756-IH16I wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas individualmente isoladas'],['Tensão nominal','125V CC'],['Faixa de tensão','90 … 146V CC'],['Borne recomendado','1756-TBCH (40 pinos)'],['Jumper de ligação','1756-JMPR']],
+  en:[['Points','16 individually isolated inputs'],['Nominal voltage','125V DC'],['Voltage range','90 … 146V DC'],['RTB','1756-TBCH (40-pin)'],['Jumper bar','1756-JMPR']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-IM16I / IM16IK', family:'clx', type:'DI-AC',
+ name:{pt:'Entrada AC Isolada 16 pontos — 159…265V CA',en:'16-Point Isolated AC Input — 159…265V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IM16I',en:'1756-IM16I wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas individualmente isoladas'],['Tensão nominal','200/240V CA'],['Faixa de tensão','159 … 265V CA'],['Frequência','47 … 63 Hz'],['Borne recomendado','1756-TBCH (40 pinos)'],['Jumper de ligação','1756-JMPR']],
+  en:[['Points','16 individually isolated inputs'],['Nominal voltage','200/240V AC'],['Voltage range','159 … 265V AC'],['Frequency','47 … 63 Hz'],['RTB','1756-TBCH (40-pin)'],['Jumper bar','1756-JMPR']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-IN16 / IN16K', family:'clx', type:'DI-AC',
+ name:{pt:'Entrada AC 16 pontos — 10…30V CA',en:'16-Point AC Input — 10…30V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IN16',en:'1756-IN16 wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas (2 grupos de 8)'],['Tensão nominal','24V CA'],['Faixa de tensão','10 … 30V CA'],['Frequência','47 … 63 Hz'],['Borne recomendado','1756-TBNH (20 pinos)']],
+  en:[['Points','16 inputs (2 groups of 8)'],['Nominal voltage','24V AC'],['Voltage range','10 … 30V AC'],['Frequency','47 … 63 Hz'],['RTB','1756-TBNH (20-pin)']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-IV16 / IV16K', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada DC Sourcing 16 pontos — 10…30V CC',en:'16-Point Sourcing DC Input — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IV16',en:'1756-IV16 wiring'},
+ specs:{
+  pt:[['Pontos','16 entradas sourcing (2 grupos de 8)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Tipo de ligação','Sourcing (PNP)'],['Borne recomendado','1756-TBNH (20 pinos)']],
+  en:[['Points','16 sourcing inputs (2 groups of 8)'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Wiring type','Sourcing (PNP)'],['RTB','1756-TBNH (20-pin)']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-IV32 / IV32K', family:'clx', type:'DI-DC',
+ name:{pt:'Entrada DC Sourcing 32 pontos — 10…30V CC',en:'32-Point Sourcing DC Input — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-IV32',en:'1756-IV32 wiring'},
+ specs:{
+  pt:[['Pontos','32 entradas sourcing (2 grupos de 16)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Tipo de ligação','Sourcing (PNP)'],['Borne recomendado','1756-TBCH (40 pinos)']],
+  en:[['Points','32 sourcing inputs (2 groups of 16)'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Wiring type','Sourcing (PNP)'],['RTB','1756-TBCH (40-pin)']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+// ─── AC OUTPUTS ───────────────────────────────────────────────
+{catNum:'1756-OA8', family:'clx', type:'DO-AC',
+ name:{pt:'Saída AC 8 pontos — 74…265V CA',en:'8-Point AC Output — 74…265V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OA8',en:'1756-OA8 wiring'},
+ specs:{
+  pt:[['Pontos','8 saídas TRIAC (1 grupo)'],['Tensão nominal','120/240V CA'],['Faixa de tensão','74 … 265V CA'],['Corrente por ponto','2 A @ 60 Hz'],['Corrente por módulo','8 A'],['Fusível','Não protegido — recomendado IFM fusível'],['Borne recomendado','1756-TBNH (20 pinos)'],['IFM compatível','1492-IFM20DS120-4 / 1492-IFM20F-FS120-2']],
+  en:[['Points','8 TRIAC outputs (1 group)'],['Nominal voltage','120/240V AC'],['Voltage range','74 … 265V AC'],['Current/point','2A @ 60 Hz'],['Current/module','8A'],['Fuse','Not protected — fused IFM recommended'],['RTB','1756-TBNH (20-pin)'],['Compatible IFM','1492-IFM20DS120-4 / 1492-IFM20F-FS120-2']]},
+ faults:[
+  {code:'Output Overcurrent', desc:{pt:'Corrente de saída excedida — verificar carga e fusível externo',en:'Output current exceeded — check load and external fuse'}},
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OA8D', family:'clx', type:'DO-AC',
+ name:{pt:'Saída AC Diagnóstica 8 pontos — 74…132V CA',en:'8-Point Diagnostic AC Output — 74…132V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OA8D',en:'1756-OA8D wiring'},
+ specs:{
+  pt:[['Pontos','8 saídas TRIAC diagnósticas'],['Tensão nominal','100/120V CA'],['Faixa de tensão','74 … 132V CA'],['Diagnóstico','Curto-circuito, carga aberta por canal'],['Borne recomendado','1756-TBNH (20 pinos)'],['IFM compatível','1492-IFM20DS120-4 / 1492-IFM20F-FS120-4']],
+  en:[['Points','8 diagnostic TRIAC outputs'],['Nominal voltage','100/120V AC'],['Voltage range','74 … 132V AC'],['Diagnostics','Short circuit, open load per channel'],['RTB','1756-TBNH (20-pin)'],['Compatible IFM','1492-IFM20DS120-4 / 1492-IFM20F-FS120-4']]},
+ faults:[
+  {code:'FLT LED', desc:{pt:'Curto-circuito ou carga aberta detectada no canal',en:'Short circuit or open load detected on channel'}},
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OA8E / OA8EK', family:'clx', type:'DO-AC',
+ name:{pt:'Saída AC com Fusível Eletrônico 8 pontos — 74…132V CA',en:'8-Point Electronic-Fused AC Output — 74…132V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OA8E',en:'1756-OA8E wiring'},
+ specs:{
+  pt:[['Pontos','8 saídas TRIAC com fusível eletrônico por ponto'],['Tensão nominal','100/120V CA'],['Faixa de tensão','74 … 132V CA'],['Fusível','Eletrônico por canal (sem fusível físico)'],['Diagnóstico','Detecção de curto, perda de alimentação de campo'],['Borne recomendado','1756-TBNH (20 pinos)'],['IFM compatível','1492-IFM20DS120-4']],
+  en:[['Points','8 electronic-fused TRIAC outputs per point'],['Nominal voltage','100/120V AC'],['Voltage range','74 … 132V AC'],['Fuse','Electronic per channel (no physical fuse)'],['Diagnostics','Short circuit, field power loss detection'],['RTB','1756-TBNH (20-pin)'],['Compatible IFM','1492-IFM20DS120-4']]},
+ faults:[
+  {code:'Electronic Fuse Blown', desc:{pt:'Fusível eletrônico atuou — remover curto e resetar saída',en:'Electronic fuse tripped — remove short and reset output'}},
+  {code:'Field Power Loss', desc:{pt:'Perda de tensão CA de campo — verificar alimentação L1/L2',en:'AC field power lost — check L1/L2 supply'}}
+ ]},
+
+{catNum:'1756-OA16 / OA16K', family:'clx', type:'DO-AC',
+ name:{pt:'Saída AC 16 pontos — 74…265V CA',en:'16-Point AC Output — 74…265V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OA16',en:'1756-OA16 wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas TRIAC (2 grupos de 8)'],['Tensão nominal','120/240V CA'],['Faixa de tensão','74 … 265V CA'],['Corrente por ponto','1 A @ 60 Hz'],['Fusível mecânico','3,15A @ 250V CA (por grupo) — Littelfuse H2153.15'],['Borne recomendado','1756-TBNH (20 pinos)'],['IFM compatível','1492-IFM20F / 1492-IFM20F-FS-2']],
+  en:[['Points','16 TRIAC outputs (2 groups of 8)'],['Nominal voltage','120/240V AC'],['Voltage range','74 … 265V AC'],['Current/point','1A @ 60 Hz'],['Mechanical fuse','3.15A @ 250V AC (per group) — Littelfuse H2153.15'],['RTB','1756-TBNH (20-pin)'],['Compatible IFM','1492-IFM20F / 1492-IFM20F-FS-2']]},
+ faults:[
+  {code:'Group Fuse Blown', desc:{pt:'Fusível mecânico do grupo aberto — substituir Littelfuse H2153.15',en:'Group mechanical fuse open — replace Littelfuse H2153.15'}},
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OA16I / OA16IK', family:'clx', type:'DO-AC',
+ name:{pt:'Saída AC Isolada 16 pontos — 74…265V CA',en:'16-Point Isolated AC Output — 74…265V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OA16I',en:'1756-OA16I wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas individualmente isoladas'],['Tensão nominal','120/240V CA'],['Faixa de tensão','74 … 265V CA'],['Corrente por ponto','1 A @ 60 Hz'],['Fusível','Não protegido — usar IFM fusível'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40F-FS120-4']],
+  en:[['Points','16 individually isolated outputs'],['Nominal voltage','120/240V AC'],['Voltage range','74 … 265V AC'],['Current/point','1A @ 60 Hz'],['Fuse','Not protected — use fused IFM'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40F-FS120-4']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+// ─── DC OUTPUTS ───────────────────────────────────────────────
+{catNum:'1756-OB8 / OB8K', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC 8 pontos — 10…30V CC sourcing',en:'8-Point DC Output — 10…30V DC Sourcing'},
+ image:null, imageAlt:{pt:'Ligação 1756-OB8',en:'1756-OB8 wiring'},
+ specs:{
+  pt:[['Pontos','8 saídas sourcing (1 grupo)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Corrente por ponto','2 A'],['Fusível','Não protegido — usar IFM fusível'],['Borne recomendado','1756-TBNH (20 pinos)'],['IFM compatível','1492-IFM20DS24-4 / 1492-IFM20F-FS24-2']],
+  en:[['Points','8 sourcing outputs (1 group)'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Current/point','2A'],['Fuse','Not protected — use fused IFM'],['RTB','1756-TBNH (20-pin)'],['Compatible IFM','1492-IFM20DS24-4 / 1492-IFM20F-FS24-2']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OB8EI / OB8EIK', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Fusível Eletrônico Isolada 8 pontos — 10…30V CC',en:'8-Point Electronic-Fused Isolated DC Output — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OB8EI',en:'1756-OB8EI wiring'},
+ specs:{
+  pt:[['Pontos','8 saídas isoladas com fusível eletrônico por ponto'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Corrente por ponto','2 A'],['Fusível','Eletrônico por canal'],['Diagnóstico','Curto-circuito, carga aberta'],['Borne recomendado','1756-TBNH (20 pinos)']],
+  en:[['Points','8 isolated outputs with electronic fuse per point'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Current/point','2A'],['Fuse','Electronic per channel'],['Diagnostics','Short circuit, open load'],['RTB','1756-TBNH (20-pin)']]},
+ faults:[
+  {code:'Electronic Fuse', desc:{pt:'Fusível eletrônico atuou — verificar carga e resetar',en:'Electronic fuse tripped — check load and reset'}},
+  {code:'Open Load', desc:{pt:'Carga aberta detectada na saída',en:'Open load detected on output'}}
+ ]},
+
+{catNum:'1756-OB16D / OB16DK', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Diagnóstica 16 pontos — 19,2…30V CC',en:'16-Point Diagnostic DC Output — 19.2…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OB16D',en:'1756-OB16D wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas sourcing diagnósticas (4 grupos de 4)'],['Tensão nominal','24V CC'],['Faixa de tensão','19,2 … 30V CC'],['Corrente por ponto','1 A'],['Fusível','Eletrônico por ponto'],['Diagnóstico','Curto-circuito, carga aberta, fio aberto'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40F-F24D-2 / 1492-IFM40F-FS24-2']],
+  en:[['Points','16 diagnostic sourcing outputs (4 groups of 4)'],['Nominal voltage','24V DC'],['Voltage range','19.2 … 30V DC'],['Current/point','1A'],['Fuse','Electronic per point'],['Diagnostics','Short circuit, open load, open wire'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40F-F24D-2 / 1492-IFM40F-FS24-2']]},
+ faults:[
+  {code:'FLT (Short/Open)', desc:{pt:'Curto ou carga aberta detectada — LED FLT aceso no canal',en:'Short or open load detected — FLT LED lit on channel'}},
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OB16E / OB16EK', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Fusível Eletrônico 16 pontos — 10…31,2V CC',en:'16-Point Electronic-Fused DC Output — 10…31.2V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OB16E',en:'1756-OB16E wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas sourcing (2 grupos de 8)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 31,2V CC'],['Corrente por ponto','2 A contínuos'],['Fusível','Eletrônico por ponto'],['Diagnóstico','Curto-circuito, carga aberta por canal'],['LED','Verde ON / Vermelho FAULT'],['Borne recomendado','1756-TBNH (20 pinos)']],
+  en:[['Points','16 sourcing outputs (2 groups of 8)'],['Nominal voltage','24V DC'],['Voltage range','10 … 31.2V DC'],['Current/point','2A continuous'],['Fuse','Electronic per point'],['Diagnostics','Short circuit, open load per channel'],['LED','Green ON / Red FAULT'],['RTB','1756-TBNH (20-pin)']]},
+ faults:[
+  {code:'Electronic Fuse', desc:{pt:'Fusível eletrônico atuou — remover curto e resetar saída',en:'Electronic fuse tripped — remove short and reset output'}},
+  {code:'Open Load', desc:{pt:'Saída ON mas sem consumo de corrente detectado',en:'Output ON but no current draw detected'}},
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OB16I', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Isolada 16 pontos — 10…30V CC',en:'16-Point Isolated DC Output — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OB16I',en:'1756-OB16I wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas individualmente isoladas'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Corrente por ponto','2 A'],['Fusível','Não protegido — usar IFM fusível'],['Borne recomendado','1756-TBCH (40 pinos)']],
+  en:[['Points','16 individually isolated outputs'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Current/point','2A'],['Fuse','Not protected — use fused IFM'],['RTB','1756-TBCH (40-pin)']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OB16IEF / OB16IEFK', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Rápida Isolada 16 pontos — 10…30V CC',en:'16-Point Isolated Fast DC Output — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OB16IEF',en:'1756-OB16IEF wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas isoladas rápidas (peer control)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Corrente por ponto','2 A'],['Fusível','Eletrônico por ponto'],['Tempo de resposta','< 50 µs (saída rápida)'],['Borne recomendado','1756-TBCH (40 pinos)']],
+  en:[['Points','16 isolated fast outputs (peer control)'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Current/point','2A'],['Fuse','Electronic per point'],['Response time','< 50 µs (fast output)'],['RTB','1756-TBCH (40-pin)']]},
+ faults:[
+  {code:'Electronic Fuse', desc:{pt:'Fusível eletrônico atuou — verificar carga',en:'Electronic fuse tripped — check load'}},
+  {code:'Peer Fault', desc:{pt:'Falha de comunicação peer-to-peer',en:'Peer-to-peer communication fault'}}
+ ]},
+
+{catNum:'1756-OB16IEFS / OB16IEFSK', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Rápida Escalonada Isolada 16 pontos — 10…30V CC',en:'16-Point Isolated Fast Scheduled DC Output — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OB16IEFS',en:'1756-OB16IEFS wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas isoladas rápidas escalonadas (por ponto)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Corrente por ponto','2 A'],['Fusível','Eletrônico por ponto'],['Escalonamento','Sincronizado com CST (Coordinated System Time)'],['Borne recomendado','1756-TBCH (40 pinos)']],
+  en:[['Points','16 isolated fast scheduled outputs (per point)'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Current/point','2A'],['Fuse','Electronic per point'],['Scheduling','Synchronized with CST (Coordinated System Time)'],['RTB','1756-TBCH (40-pin)']]},
+ faults:[
+  {code:'Electronic Fuse', desc:{pt:'Fusível eletrônico atuou',en:'Electronic fuse tripped'}},
+  {code:'CST Sync Fault', desc:{pt:'Falha de sincronização com CST — verificar Logix e configuração de rede',en:'CST synchronization fault — check Logix and network config'}}
+ ]},
+
+{catNum:'1756-OB16IS', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Escalonada Isolada 16 pontos — 10…30V CC',en:'16-Point Isolated Scheduled DC Output — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OB16IS',en:'1756-OB16IS wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas isoladas escalonadas'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Corrente por ponto','2 A'],['Fusível','Não protegido'],['Escalonamento','Por ponto — sincronizado com CST'],['Borne recomendado','1756-TBCH (40 pinos)']],
+  en:[['Points','16 isolated scheduled outputs'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Current/point','2A'],['Fuse','Not protected'],['Scheduling','Per point — synchronized with CST'],['RTB','1756-TBCH (40-pin)']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OB32 / OB32K / OB32XT', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC 32 pontos — 10…31,2V CC sourcing',en:'32-Point DC Output — 10…31.2V DC Sourcing'},
+ image:null, imageAlt:{pt:'Ligação 1756-OB32',en:'1756-OB32 wiring'},
+ specs:{
+  pt:[['Pontos','32 saídas sourcing (2 grupos de 16)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 31,2V CC'],['Corrente por ponto','1 A'],['Fusível','Não protegido — usar IFM fusível'],['Borne recomendado','1756-TBCH (40 pinos)'],['Variante XT','Conformal coat']],
+  en:[['Points','32 sourcing outputs (2 groups of 16)'],['Nominal voltage','24V DC'],['Voltage range','10 … 31.2V DC'],['Current/point','1A'],['Fuse','Not protected — use fused IFM'],['RTB','1756-TBCH (40-pin)'],['XT variant','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OC8 / OC8K', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC 8 pontos — 30…60V CC',en:'8-Point DC Output — 30…60V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OC8',en:'1756-OC8 wiring'},
+ specs:{
+  pt:[['Pontos','8 saídas sourcing (1 grupo)'],['Tensão nominal','48V CC'],['Faixa de tensão','30 … 60V CC'],['Corrente por ponto','2 A'],['Fusível','Não protegido'],['Borne recomendado','1756-TBNH (20 pinos)']],
+  en:[['Points','8 sourcing outputs (1 group)'],['Nominal voltage','48V DC'],['Voltage range','30 … 60V DC'],['Current/point','2A'],['Fuse','Not protected'],['RTB','1756-TBNH (20-pin)']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OG16 / OG16K', family:'clx', type:'DO-DC',
+ name:{pt:'Saída TTL 16 pontos — 5V CC',en:'16-Point TTL Output — 5V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OG16',en:'1756-OG16 wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas TTL (2 grupos de 8)'],['Tensão nominal','5V CC'],['Corrente por ponto','25 mA'],['Nível lógico HIGH saída','≥ 3,76V'],['Borne recomendado','1756-TBNH (20 pinos)'],['Sem proteção de polaridade inversa','Atenção no cabeamento']],
+  en:[['Points','16 TTL outputs (2 groups of 8)'],['Nominal voltage','5V DC'],['Current/point','25 mA'],['HIGH output level','≥ 3.76V'],['RTB','1756-TBNH (20-pin)'],['No reverse polarity protection','Take care in wiring']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OH8I', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Isolada 8 pontos — 90…146V CC',en:'8-Point Isolated DC Output — 90…146V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OH8I',en:'1756-OH8I wiring'},
+ specs:{
+  pt:[['Pontos','8 saídas individualmente isoladas'],['Tensão nominal','125V CC'],['Faixa de tensão','90 … 146V CC'],['Corrente por ponto','1 A'],['Fusível','Não protegido'],['Borne recomendado','1756-TBNH (20 pinos)']],
+  en:[['Points','8 individually isolated outputs'],['Nominal voltage','125V DC'],['Voltage range','90 … 146V DC'],['Current/point','1A'],['Fuse','Not protected'],['RTB','1756-TBNH (20-pin)']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-ON8 / ON8K', family:'clx', type:'DO-AC',
+ name:{pt:'Saída AC 8 pontos — 10…30V CA',en:'8-Point AC Output — 10…30V AC'},
+ image:null, imageAlt:{pt:'Ligação 1756-ON8',en:'1756-ON8 wiring'},
+ specs:{
+  pt:[['Pontos','8 saídas TRIAC (1 grupo)'],['Tensão nominal','24V CA'],['Faixa de tensão','10 … 30V CA'],['Corrente por ponto','1 A'],['Fusível','Não protegido'],['Borne recomendado','1756-TBNH (20 pinos)']],
+  en:[['Points','8 TRIAC outputs (1 group)'],['Nominal voltage','24V AC'],['Voltage range','10 … 30V AC'],['Current/point','1A'],['Fuse','Not protected'],['RTB','1756-TBNH (20-pin)']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OV16E', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Sinking Fusível Eletrônico 16 pontos — 10…30V CC',en:'16-Point Electronic-Fused Sinking DC Output — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OV16E',en:'1756-OV16E wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas sinking com fusível eletrônico'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Corrente por ponto','2 A'],['Fusível','Eletrônico por ponto'],['Tipo de ligação','Sinking (NPN)'],['Borne recomendado','1756-TBNH (20 pinos)']],
+  en:[['Points','16 sinking outputs with electronic fuse'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Current/point','2A'],['Fuse','Electronic per point'],['Wiring type','Sinking (NPN)'],['RTB','1756-TBNH (20-pin)']]},
+ faults:[
+  {code:'Electronic Fuse', desc:{pt:'Fusível eletrônico atuou — verificar carga e resetar',en:'Electronic fuse tripped — check load and reset'}},
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+{catNum:'1756-OV32E / OV32EK', family:'clx', type:'DO-DC',
+ name:{pt:'Saída DC Sinking Fusível Eletrônico 32 pontos — 10…30V CC',en:'32-Point Electronic-Fused Sinking DC Output — 10…30V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OV32E',en:'1756-OV32E wiring'},
+ specs:{
+  pt:[['Pontos','32 saídas sinking com fusível eletrônico (2 grupos de 16)'],['Tensão nominal','24V CC'],['Faixa de tensão','10 … 30V CC'],['Corrente por ponto','1 A'],['Fusível','Eletrônico por ponto'],['Tipo de ligação','Sinking (NPN)'],['Borne recomendado','1756-TBCH (40 pinos)']],
+  en:[['Points','32 sinking outputs with electronic fuse (2 groups of 16)'],['Nominal voltage','24V DC'],['Voltage range','10 … 30V DC'],['Current/point','1A'],['Fuse','Electronic per point'],['Wiring type','Sinking (NPN)'],['RTB','1756-TBCH (40-pin)']]},
+ faults:[
+  {code:'Electronic Fuse', desc:{pt:'Fusível eletrônico atuou — verificar carga e resetar',en:'Electronic fuse tripped — check load and reset'}},
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}}
+ ]},
+
+// ─── CONTACT OUTPUTS ──────────────────────────────────────────
+{catNum:'1756-OW16I / OW16IK', family:'clx', type:'DO-Contact',
+ name:{pt:'Saída Contato Isolado 16 pontos — 10…265V CA / 5…150V CC',en:'16-Point Isolated Contact Output — 10…265V AC / 5…150V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OW16I',en:'1756-OW16I wiring'},
+ specs:{
+  pt:[['Pontos','16 saídas relé/contato individualmente isoladas'],['Tensão CA','10 … 265V CA'],['Tensão CC','5 … 150V CC'],['Corrente por ponto','2 A @ 240V CA / 2 A @ 30V CC'],['Tipo de contato','Normalmente aberto (NA) — SPST'],['Fusível','Não protegido — usar IFM fusível'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40F-FS-4 / 1492-IFM40F-FS240-4']],
+  en:[['Points','16 individually isolated relay/contact outputs'],['AC voltage','10 … 265V AC'],['DC voltage','5 … 150V DC'],['Current/point','2A @ 240V AC / 2A @ 30V DC'],['Contact type','Normally open (NO) — SPST'],['Fuse','Not protected — use fused IFM'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40F-FS-4 / 1492-IFM40F-FS240-4']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}},
+  {code:'Welded Contact', desc:{pt:'Contato soldado por sobrecorrente — substituir o módulo',en:'Contact welded by overcurrent — replace module'}}
+ ]},
+
+{catNum:'1756-OX8I / OX8IK', family:'clx', type:'DO-Contact',
+ name:{pt:'Saída Contato Isolado 8 pontos — 10…265V CA / 5…150V CC',en:'8-Point Isolated Contact Output — 10…265V AC / 5…150V DC'},
+ image:null, imageAlt:{pt:'Ligação 1756-OX8I',en:'1756-OX8I wiring'},
+ specs:{
+  pt:[['Pontos','8 saídas relé/contato individualmente isoladas'],['Tensão CA','10 … 265V CA'],['Tensão CC','5 … 150V CC'],['Corrente por ponto','2 A @ 240V CA'],['Tipo de contato','Form A (NA) + Form B (NF) por canal'],['Fusível','Não protegido — usar IFM fusível'],['Borne recomendado','1756-TBCH (40 pinos)'],['IFM compatível','1492-IFM40F-FS24-2 / 1492-IFM40F-FS240-4']],
+  en:[['Points','8 individually isolated relay/contact outputs'],['AC voltage','10 … 265V AC'],['DC voltage','5 … 150V DC'],['Current/point','2A @ 240V AC'],['Contact type','Form A (NO) + Form B (NC) per channel'],['Fuse','Not protected — use fused IFM'],['RTB','1756-TBCH (40-pin)'],['Compatible IFM','1492-IFM40F-FS24-2 / 1492-IFM40F-FS240-4']]},
+ faults:[
+  {code:'COMM FAULT', desc:{pt:'Perda de comunicação com backplane',en:'Backplane communication loss'}},
+  {code:'Welded Contact', desc:{pt:'Contato soldado por sobrecorrente — substituir o módulo',en:'Contact welded by overcurrent — replace module'}}
+ ]}
+
+]; // end ioData
+
+// ── Dark mode ─────────────────────────────────
+var darkOn = false;
+function toggleDark() {
+  darkOn = !darkOn;
+  document.documentElement.setAttribute('data-theme', darkOn ? 'dark' : '');
+  document.getElementById('dark-label').textContent = darkOn ? T[currentLang].darkOff : T[currentLang].darkOn;
+}
+
+// ── Language ──────────────────────────────────
+function toggleLanguage() {
+  currentLang = currentLang === 'pt' ? 'en' : 'pt';
+  updateUI(); filterData();
+}
+function updateUI() {
+  var t = T[currentLang];
+  document.getElementById('title-text').innerText    = t.title;
+  document.getElementById('subtitle-text').innerText = t.subtitle;
+  document.getElementById('langToggle').innerText    = t.langBtn;
+  document.getElementById('dark-label').textContent  = darkOn ? t.darkOff : t.darkOn;
+  document.getElementById('label-search').innerText  = t.searchLabel;
+  document.getElementById('searchInput').placeholder = t.searchPh;
+  document.getElementById('label-family').innerText  = t.famLabel;
+  document.getElementById('label-type').innerText    = t.typeLabel;
+  document.getElementById('familyFilter').options[0].text = t.famAll;
+  document.getElementById('typeFilter').options[0].text   = t.typeAll;
+}
+
+// ── Render ────────────────────────────────────
+function placeholderSVG() {
+  return '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.4"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+}
+
+function renderCards(data) {
+  var grid = document.getElementById('ioGrid');
+  grid.innerHTML = '';
+  var t = T[currentLang];
+  if (!data.length) { grid.innerHTML = '<div class="no-results">' + t.noResults + '</div>'; return; }
+
+  data.forEach(function(item, idx) {
+    var fam   = FAM[item.family] || {label: item.family};
+    var tc    = tagClass(item.type);
+    var card  = document.createElement('div');
+    card.className = 'card';
+
+    var imgBlock = '';
+    if (item.image) {
+      var cap = t.imgCaption + item.catNum;
+      var alt = item.imageAlt[currentLang];
+      imgBlock =
+        '<div class="module-image-wrap">' +
+          '<img src="' + item.image + '" alt="' + alt + '" loading="lazy">' +
+          '<button class="btn-fullscreen" data-src="' + item.image + '" data-alt="' + alt + '" data-cap="' + cap + '">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>' +
+            t.fullscreen +
+          '</button>' +
+        '</div>' +
+        '<div class="image-caption">' + cap + '</div>';
+    } else {
+      imgBlock =
+        '<div class="module-image-wrap">' +
+          '<div class="image-placeholder">' + placeholderSVG() + '<span>' + t.noImg + '</span></div>' +
+        '</div>';
+    }
+
+    var specRows = item.specs[currentLang].map(function(r){
+      return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+    }).join('');
+
+    var faultHTML = item.faults.map(function(f){
+      return '<div class="fault-item">' +
+        '<span class="fault-badge">' + f.code + '</span>' +
+        '<span>' + f.desc[currentLang] + '</span>' +
+      '</div>';
+    }).join('');
+
+    card.innerHTML =
+      '<div class="card-body">' +
+        '<div class="card-header">' +
+          '<span class="module-code">' + item.catNum + '</span>' +
+          '<span class="family-tag ' + tc + '">' + fam.label + '</span>' +
+        '</div>' +
+        '<div class="module-name">' + item.name[currentLang] + '</div>' +
+        '<span class="module-badge">' + item.type + '</span>' +
+        imgBlock +
+        '<div class="section-divider">' + t.specsTitle + '</div>' +
+        '<table class="specs-table">' + specRows + '</table>' +
+        '<div class="faults-title">&#9888; ' + t.faultsTitle + '</div>' +
+        faultHTML +
+      '</div>';
+
+    grid.appendChild(card);
+  });
+
+  // attach fullscreen buttons
+  grid.querySelectorAll('.btn-fullscreen').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      lbOpen(btn.dataset.src, btn.dataset.alt, btn.dataset.cap);
+    });
+  });
+}
+
+// ── Filter ────────────────────────────────────
+function filterData() {
+  var s  = document.getElementById('searchInput').value.toLowerCase();
+  var fv = document.getElementById('familyFilter').value;
+  var tv = document.getElementById('typeFilter').value;
+  var filtered = ioData.filter(function(item) {
+    var mF = fv === 'all' || item.family === fv;
+    var mT = tv === 'all' || item.type === tv;
+    var mS = !s || item.catNum.toLowerCase().includes(s) ||
+      item.name[currentLang].toLowerCase().includes(s) ||
+      item.specs[currentLang].some(function(r){ return r[0].toLowerCase().includes(s) || r[1].toLowerCase().includes(s); }) ||
+      item.faults.some(function(f){ return f.desc[currentLang].toLowerCase().includes(s) || f.code.toLowerCase().includes(s); });
+    return mF && mT && mS;
+  });
+  renderCards(filtered);
+}
+
+// ── Modal ─────────────────────────────────────
+function closeModal() { document.getElementById('detailModal').classList.remove('active'); }
+document.getElementById('detailModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+
+// ── Lightbox ──────────────────────────────────
+var lb = { scale:1, minS:0.1, maxS:12, tx:0, ty:0, drag:false, sx:0, sy:0, stx:0, sty:0, pinch:null, hint:null };
+
+function lbOpen(src, alt, cap) {
+  var box = document.getElementById('lightbox');
+  var img = document.getElementById('lb-img');
+  document.getElementById('lb-title').textContent = cap || alt;
+  img.alt = alt; img.src = src;
+  box.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  img.onload = lbFit;
+  if (img.complete && img.naturalWidth) lbFit();
+  var hint = document.getElementById('lb-hint');
+  hint.classList.remove('hidden');
+  clearTimeout(lb.hint);
+  lb.hint = setTimeout(function(){ hint.classList.add('hidden'); }, 3500);
+}
+function lbClose() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+  document.getElementById('lb-img').src = '';
+}
+function lbFit() {
+  var vp  = document.getElementById('lb-viewport');
+  var img = document.getElementById('lb-img');
+  var vpW = vp.clientWidth, vpH = vp.clientHeight;
+  var iW  = img.naturalWidth  || vpW;
+  var iH  = img.naturalHeight || vpH;
+  lb.scale = Math.min(vpW / iW, vpH / iH, 1);
+  lb.tx = (vpW - iW * lb.scale) / 2;
+  lb.ty = (vpH - iH * lb.scale) / 2;
+  lbApply();
+}
+function lbZoomStep(d) {
+  var vp = document.getElementById('lb-viewport');
+  lbZoomAt(lb.scale + d, vp.clientWidth / 2, vp.clientHeight / 2);
+}
+function lbZoomAt(ns, cx, cy) {
+  ns = Math.min(Math.max(ns, lb.minS), lb.maxS);
+  var r = ns / lb.scale;
+  lb.tx = cx - r * (cx - lb.tx);
+  lb.ty = cy - r * (cy - lb.ty);
+  lb.scale = ns; lbApply();
+}
+function lbApply() {
+  var img = document.getElementById('lb-img');
+  img.style.transform = 'translate(' + lb.tx + 'px,' + lb.ty + 'px) scale(' + lb.scale + ')';
+  document.getElementById('lb-zoom-label').textContent = Math.round(lb.scale * 100) + '%';
+}
+
+document.getElementById('btn-zoom-in').addEventListener('click',   function(){ lbZoomStep(0.25); });
+document.getElementById('btn-zoom-out').addEventListener('click',  function(){ lbZoomStep(-0.25); });
+document.getElementById('btn-lb-reset').addEventListener('click',  lbFit);
+document.getElementById('btn-lb-close').addEventListener('click',  lbClose);
+
+var _vp = document.getElementById('lb-viewport');
+_vp.addEventListener('mousedown', function(e) {
+  if (e.button!==0) return;
+  lb.drag=true; lb.sx=e.clientX; lb.sy=e.clientY; lb.stx=lb.tx; lb.sty=lb.ty;
+  _vp.classList.add('grabbing'); e.preventDefault();
+});
+window.addEventListener('mousemove', function(e) {
+  if (!lb.drag) return;
+  lb.tx = lb.stx + (e.clientX - lb.sx);
+  lb.ty = lb.sty + (e.clientY - lb.sy);
+  lbApply();
+});
+window.addEventListener('mouseup', function() { lb.drag=false; _vp.classList.remove('grabbing'); });
+
+_vp.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  var r = _vp.getBoundingClientRect();
+  lbZoomAt(lb.scale + (e.deltaY < 0 ? 0.15 : -0.15), e.clientX - r.left, e.clientY - r.top);
+}, {passive:false});
+
+_vp.addEventListener('dblclick', function(e) {
+  var r = _vp.getBoundingClientRect();
+  if (lb.scale > 1.2) lbFit(); else lbZoomAt(2.5, e.clientX - r.left, e.clientY - r.top);
+});
+
+_vp.addEventListener('touchstart', function(e) {
+  if (e.touches.length===1) {
+    lb.drag=true; lb.sx=e.touches[0].clientX; lb.sy=e.touches[0].clientY; lb.stx=lb.tx; lb.sty=lb.ty; lb.pinch=null;
+  } else if (e.touches.length===2) {
+    lb.drag=false;
+    lb.pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+  }
+  e.preventDefault();
+}, {passive:false});
+_vp.addEventListener('touchmove', function(e) {
+  e.preventDefault();
+  if (e.touches.length===1 && lb.drag) {
+    lb.tx=lb.stx+(e.touches[0].clientX-lb.sx); lb.ty=lb.sty+(e.touches[0].clientY-lb.sy); lbApply();
+  } else if (e.touches.length===2) {
+    var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+    if (lb.pinch) {
+      var r=_vp.getBoundingClientRect();
+      lbZoomAt(lb.scale*(d/lb.pinch), ((e.touches[0].clientX+e.touches[1].clientX)/2)-r.left, ((e.touches[0].clientY+e.touches[1].clientY)/2)-r.top);
+    }
+    lb.pinch=d;
+  }
+}, {passive:false});
+_vp.addEventListener('touchend', function(){ lb.drag=false; lb.pinch=null; });
+
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('lightbox').classList.contains('active')) return;
+  if (e.key==='Escape') lbClose();
+  if (e.key==='+'||e.key==='=') lbZoomStep(0.25);
+  if (e.key==='-') lbZoomStep(-0.25);
+  if (e.key==='0') lbFit();
+});
+
+// ── Init ─────────────────────────────
+window.onload = function() { updateUI(); renderCards(ioData); };
+</script>
+</body>
+</html>
