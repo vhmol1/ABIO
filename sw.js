@@ -1,5 +1,4 @@
 const CACHE_NAME = 'ab-io-v2';
-const BASE_URL = '/ABIO/';
 const ASSETS = [
   './',
   './index.html',
