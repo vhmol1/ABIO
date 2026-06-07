@@ -1,9 +1,10 @@
 const CACHE_NAME = 'ab-io-v2';
 const BASE_URL = '/ABIO/';
 const ASSETS = [
-  BASE_URL,
-  BASE_URL + 'index.html',
-  BASE_URL + 'manifest.json'
+  './',
+  './index.html',
+  './manifest.json',
+  'https://raw.githubusercontent.com/vhmol1/AbDrives/refs/heads/main/ROK-331842c1.png'
 ];
 
 self.addEventListener('install', event => {
