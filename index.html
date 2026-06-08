@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rockwell Automation - I/O Reference Central</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root {
+  --primary: #cd1a2b;
+  --dark-hdr: #2d3142;
+  --bg: #f4f5f6;
+  --card: #ffffff;
+  --border: #e1e4e6;
+  --txt: #333333;
+  --muted: #666666;
+}
+[data-theme="dark"] {
+  --bg: #1a1d27;
+  --card: #23263a;
+  --border: #383c52;
+  --txt: #e2e4ef;
+  --muted: #9096b0;
+  --dark-hdr: #12141f;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;}
+body{background:var(--bg);color:var(--txt);line-height:1.6;padding:20px;transition:background .3s,color .3s;}
+
+/* HEADER */
+header{background:var(--dark-hdr);color:#fff;padding:20px;border-radius:8px;margin-bottom:20px;
+  display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 6px rgba(0,0,0,.15);}
+.header-left{display:flex;align-items:center;gap:16px;}
+.hdr-logo{background:var(--primary);color:#fff;font-weight:900;font-size:12px;letter-spacing:.4px;
+  padding:8px 11px;border-radius:4px;white-space:nowrap;line-height:1.35;text-align:center;cursor:pointer;
+  transition:background .2s;}
+.hdr-logo:hover{background:#a5121e;}
+.hdr-title h1{font-size:21px;font-weight:600;}
+.hdr-title p{font-size:13px;color:#9ba3b8;margin-top:2px;}
+.hdr-actions{display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
+.hdr-btn{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);
+  padding:7px 14px;font-size:13px;font-weight:600;border-radius:4px;cursor:pointer;
+  transition:background .2s;white-space:nowrap;display:flex;align-items:center;gap:5px;}
+.hdr-btn:hover{background:rgba(255,255,255,.22);}
+.hdr-btn.accent{background:var(--primary);border-color:var(--primary);}
+.hdr-btn.accent:hover{background:#a5121e;}
+
+/* SEARCH */
+.search-bar{background:var(--card);padding:18px 20px;border-radius:8px;margin-bottom:20px;
+  box-shadow:0 2px 4px rgba(0,0,0,.06);display:flex;gap:14px;flex-wrap:wrap;transition:background .3s;}
+.s-box,.f-box{flex:1;min-width:190px;}
+label{display:block;margin-bottom:5px;font-weight:600;font-size:13px;color:var(--muted);}
+input[type=text],select{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:4px;
+  font-size:14px;outline:none;background:var(--bg);color:var(--txt);transition:border-color .2s,background .3s;}
+input[type=text]:focus,select:focus{border-color:var(--primary);}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;}
+
+/* CARD */
+.card{background:var(--card);border-left:5px solid var(--primary);border-radius:4px;
+  box-shadow:0 2px 4px rgba(0,0,0,.07);display:flex;flex-direction:column;
+  transition:transform .2s,background .3s;overflow:hidden;}
+.card:hover{transform:translateY(-2px);}
+.card-body{padding:16px 18px;flex:1;display:flex;flex-direction:column;}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;}
+.mod-code{font-size:16px;font-weight:700;color:var(--primary);}
+.fam-tag{padding:3px 9px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.5px;white-space:nowrap;}
+.t-clx-ac {background:#fde8ea;color:#8b0000;}
+.t-clx-dc {background:#e6f4ec;color:#1a6e3c;}
+.t-clx-out{background:#e6eef9;color:#1a4e8c;}
+.t-clx-sp {background:#f3e8fb;color:#5a1a7a;}
+.t-point  {background:#fdf3e0;color:#7a4a00;}
+.mod-name{font-weight:600;font-size:14px;margin-bottom:4px;}
+.mod-badge{display:inline-block;background:var(--bg);color:var(--muted);padding:1px 8px;
+  border-radius:4px;font-size:10px;font-weight:600;margin-bottom:8px;border:1px solid var(--border);}
+.lifecycle-badge{display:inline-flex;align-items:center;gap:5px;width:fit-content;border-radius:999px;padding:3px 10px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.45px;margin-bottom:8px;border:1px solid transparent;}
+.lifecycle-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;}
+.lifecycle-active{background:#e6f4ec;color:#1a6e3c;border-color:#b7dfc8;}
+.lifecycle-active-mature{background:#edf8d8;color:#4f6f00;border-color:#cfe79a;}
+.lifecycle-end-of-life{background:#fff3cd;color:#856404;border-color:#ffc107;}
+.lifecycle-discontinued{background:#fde8ea;color:#8b0000;border-color:#f5c0c4;}
+[data-theme="dark"] .lifecycle-active{background:#143524;color:#8ee0ad;border-color:#286745;}
+[data-theme="dark"] .lifecycle-active-mature{background:#2f3a12;color:#cce982;border-color:#61752d;}
+[data-theme="dark"] .lifecycle-end-of-life{background:#3a2e00;color:#ffd54f;border-color:#ffc107;}
+[data-theme="dark"] .lifecycle-discontinued{background:#3a1a1f;color:#ff9aa6;border-color:#7a2030;}
+
+/* Image */
+.img-wrap{width:100%;background:var(--bg);border-radius:4px;margin-bottom:4px;overflow:hidden;
+  position:relative;min-height:140px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);}
+.img-wrap img{width:100%;max-height:200px;object-fit:contain;display:block;}
+.img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:7px;color:var(--muted);font-size:12px;padding:20px;text-align:center;min-height:140px;opacity:.5;}
+.img-caption{font-size:10px;color:var(--muted);text-align:center;padding:2px 8px 8px;font-style:italic;}
+.btn-fs{position:absolute;bottom:7px;right:7px;background:rgba(45,49,66,.82);color:#fff;border:none;
+  border-radius:4px;padding:4px 9px;font-size:11px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;gap:4px;backdrop-filter:blur(2px);transition:background .2s;z-index:2;}
+.btn-fs:hover{background:rgba(205,26,43,.9);}
+
+/* Sections */
+.sec-div{display:flex;align-items:center;gap:7px;margin:4px 0 7px;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.7px;color:var(--muted);}
+.sec-div::after{content:'';flex:1;height:1px;background:var(--border);}
+.specs-tbl{width:100%;border-collapse:collapse;margin-bottom:9px;font-size:12px;}
+.specs-tbl tr:nth-child(even) td{background:var(--bg);}
+.specs-tbl td{padding:4px 7px;border:1px solid var(--border);vertical-align:top;}
+.specs-tbl td:first-child{font-weight:600;width:44%;}
+.faults-ttl{font-weight:600;font-size:11px;color:#2a6f97;margin-bottom:4px;
+  border-bottom:1px dashed var(--border);padding-bottom:3px;}
+.fault-row{display:flex;gap:6px;margin-bottom:4px;font-size:11px;}
+.f-badge{background:#fff0f0;color:var(--primary);border:1px solid #f5c0c4;border-radius:3px;
+  padding:1px 5px;font-weight:700;white-space:nowrap;font-size:10px;height:fit-content;margin-top:1px;}
+[data-theme="dark"] .f-badge{background:#3a1a1f;border-color:#7a2030;}
+.no-res{grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:16px;}
+
+/* MODAL (about/info) */
+.modal-ov{display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.55);
+  align-items:center;justify-content:center;}
+.modal-ov.open{display:flex;}
+.modal-box{background:var(--card);border-radius:8px;padding:28px 30px;max-width:460px;width:90%;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);position:relative;color:var(--txt);}
+.modal-x{position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;
+  cursor:pointer;color:var(--muted);line-height:1;}
+.modal-x:hover{color:var(--primary);}
+.modal-logo{background:var(--primary);color:#fff;font-weight:900;font-size:11px;
+  padding:6px 10px;border-radius:4px;display:inline-block;margin-bottom:14px;}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:3px;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:18px;}
+.modal-row{display:flex;justify-content:space-between;padding:5px 0;
+  border-bottom:1px solid var(--border);font-size:13px;}
+.modal-row:last-child{border-bottom:none;}
+.modal-lbl{font-weight:600;color:var(--muted);}
+.modal-val{color:var(--txt);}
+.modal-footer{margin-top:16px;font-size:11px;color:var(--muted);text-align:center;}
+
+/* LIGHTBOX */
+#lightbox{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.94);flex-direction:column;}
+#lightbox.open{display:flex;}
+.lb-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 15px;
+  background:rgba(0,0,0,.55);flex-shrink:0;gap:10px;}
+.lb-ttl{color:#e0e0e0;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;flex:1;}
+.lb-ctrls{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
+.lb-btn{background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:4px;
+  padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;gap:4px;transition:background .2s;white-space:nowrap;}
+.lb-btn:hover{background:rgba(255,255,255,.25);}
+.lb-btn.lb-x:hover{background:rgba(205,26,43,.85);}
+.lb-pct{color:#aaa;font-size:12px;min-width:38px;text-align:center;}
+.lb-vp{flex:1;overflow:hidden;position:relative;display:flex;align-items:center;
+  justify-content:center;cursor:grab;user-select:none;}
+.lb-vp.grab{cursor:grabbing;}
+#lb-img{max-width:none;max-height:none;transform-origin:0 0;pointer-events:none;
+  display:block;position:absolute;top:0;left:0;}
+.lb-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.55);color:#ccc;font-size:11px;padding:4px 13px;
+  border-radius:20px;pointer-events:none;transition:opacity 1s;white-space:nowrap;}
+.lb-hint.hide{opacity:0;}
+
+  /* Obsolete badge */
+  .obsolete-badge{
+    display:inline-flex;align-items:center;gap:4px;
+    background:#fff3cd;color:#856404;border:1px solid #ffc107;
+    border-radius:4px;padding:2px 9px;font-size:10px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;
+  }
+  [data-theme="dark"] .obsolete-badge{background:#3a2e00;color:#ffd54f;border-color:#ffc107;}
+
+  /* Button to open obsolete wiring pages */
+  .btn-obs{
+    display:flex;align-items:center;gap:5px;justify-content:center;
+    width:100%;margin-top:6px;padding:7px 10px;
+    background:var(--bg);border:1px solid #ffc107;border-radius:4px;
+    color:#856404;font-size:12px;font-weight:600;cursor:pointer;
+    transition:background .2s,border-color .2s;
+  }
+  .btn-obs:hover{background:#fff3cd;border-color:#e0a800;}
+  [data-theme="dark"] .btn-obs{color:#ffd54f;background:#23263a;border-color:#ffc107;}
+  [data-theme="dark"] .btn-obs:hover{background:#3a2e00;}
+
+  /* Multi-page lightbox controls */
+  .lb-page-ctrls{
+    display:flex;align-items:center;gap:6px;flex-shrink:0;
+  }
+  .lb-page-info{color:#aaa;font-size:12px;min-width:50px;text-align:center;}
+
+@media(max-width:600px){
+  header{flex-direction:column;align-items:flex-start;gap:12px;}
+  .hdr-actions{width:100%;}
+  .hdr-btn{flex:1;justify-content:center;}
+  .grid{grid-template-columns:1fr;}
+}
+</style>
+<!-- ABIO_STAGE1_1794_DC_INPUTS_DEPLOY_CHECK -->
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="hdr-logo" onclick="openAbout()" title="About this app">ROCKWELL<br>AUTOMATION</div>
+    <div class="hdr-title">
+      <h1 id="ui-title">I/O Reference Central</h1>
+      <p id="ui-sub">Technical Reference: Wiring, Terminals, Specifications &amp; Diagnostics</p>
+    </div>
+  </div>
+  <div class="hdr-actions">
+    <button class="hdr-btn" id="btn-dark" onclick="toggleDark()">
+      <svg id="dark-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span id="dark-lbl">Dark Mode</span>
+    </button>
+    <button class="hdr-btn accent" id="btn-lang" onclick="toggleLang()">Mudar para Português</button>
+  </div>
+</header>
+
+<div class="search-bar">
+  <div class="s-box">
+    <label id="ui-slbl" for="srch">Search Module or Keyword:</label>
+    <input type="text" id="srch" oninput="doFilter()" placeholder="e.g. 1756-IB16, OB8E, sourcing, 120V AC...">
+  </div>
+  <div class="f-box">
+    <label id="ui-flbl" for="fFam">Filter by Family:</label>
+    <select id="fFam" onchange="doFilter()">
+      <option value="all" id="opt-all-fam">All Families</option>
+      <option value="clx">ControlLogix 1756</option>
+      <option value="point">POINT I/O 1734</option>
+      <option value="cplx">CompactLogix 1769</option>
+      <option value="flex">FLEX I/O 1794</option>
+    </select>
+  </div>
+  <div class="f-box">
+    <label id="ui-tlbl" for="fType">Filter by Type:</label>
+    <select id="fType" onchange="doFilter()">
+      <option value="all" id="opt-all-type">All Types</option>
+      <option value="DI-AC">Digital Input AC</option>
+      <option value="DI-DC">Digital Input DC</option>
+      <option value="DO-AC">Digital Output AC</option>
+      <option value="DO-DC">Digital Output DC</option>
+      <option value="DO-Contact">Relay / Contact Output</option>
+      <option value="AI">Analog Input</option>
+      <option value="AO">Analog Output</option>
+      <option value="Mixed">Mixed (AI+AO / DI+DO)</option>
+      <option value="Adapter">Adapter</option>
+    </select>
+  </div>
+</div>
+
+<div class="grid" id="ioGrid"></div>
+
+<!-- ABOUT MODAL -->
+<div class="modal-ov" id="aboutModal">
+  <div class="modal-box">
+    <button class="modal-x" onclick="closeAbout()">&times;</button>
+    <div class="modal-logo">ROCKWELL AUTOMATION</div>
+    <div class="modal-title">I/O Reference Central</div>
+    <div class="modal-sub" id="modal-sub-txt">Technical Reference — Wiring, Terminals, Specifications &amp; Diagnostics</div>
+    <div class="modal-row"><span class="modal-lbl" id="ml-ver">Version</span><span class="modal-val" id="mv-ver">ab-io-v2</span></div>
+    <div class="modal-row"><span class="modal-lbl" id="ml-cache">Cache Name</span><span class="modal-val" id="mv-cache">ab-io-v2</span></div>
+    <div class="modal-row"><span class="modal-lbl" id="ml-modules">Modules</span><span class="modal-val" id="mv-modules">—</span></div>
+    <div class="modal-row"><span class="modal-lbl" id="ml-fam">Families</span><span class="modal-val" id="ml-fam-val">ControlLogix 1756, POINT I/O 1734</span></div>
+    <div class="modal-row"><span class="modal-lbl" id="ml-src">Sources</span><span class="modal-val">1756-UM058K · 1734-UM001F · 1769-TD006H-EN-P</span></div>
+    <div class="modal-row"><span class="modal-lbl" id="ml-dev">Developer</span><span class="modal-val">vhmol1</span></div>
+    <div class="modal-row"><span class="modal-lbl" id="ml-pwa">PWA</span><span class="modal-val" id="mv-pwa">GitHub Pages</span></div>
+    <div class="modal-footer" id="modal-foot">Click the logo anytime to view this information.</div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div class="lb-bar">
+    <span class="lb-ttl" id="lb-ttl"></span>
+    <div class="lb-ctrls">
+      <div class="lb-page-ctrls" id="lb-page-ctrls" style="display:none">
+        <button class="lb-btn" id="lb-prev">&#8249;</button>
+        <span class="lb-page-info" id="lb-page-info">1 / 1</span>
+        <button class="lb-btn" id="lb-next">&#8250;</button>
+      </div>
+      <button class="lb-btn" id="lb-out"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      <span class="lb-pct" id="lb-pct">100%</span>
+      <button class="lb-btn" id="lb-in"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      <button class="lb-btn" id="lb-rst">Reset</button>
+      <button class="lb-btn lb-x" id="lb-cls">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span id="lb-cls-lbl">Close</span>
+      </button>
+    </div>
+  </div>
+  <div class="lb-vp" id="lb-vp">
+    <img id="lb-img" src="" alt="">
+    <div class="lb-hint" id="lb-hint">Scroll to zoom &middot; Drag to pan &middot; Pinch on mobile</div>
+  </div>
+</div>
+
+<script>
+// ─── APP METADATA ─────────────────────────────
+var APP_VERSION = 'ab-io-v3-stage1-1794dc';
+var APP_BUILD   = '2025-07';
+
+// ─── PREFERENCES (localStorage) ───────────────
+var PREF_KEY = 'abio_prefs';
+function loadPrefs() {
+  try {
+    var raw = localStorage.getItem(PREF_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+function savePrefs(obj) {
+  try { localStorage.setItem(PREF_KEY, JSON.stringify(obj)); } catch(e) {}
+}
+
+// ─── STATE ────────────────────────────────────
+var prefs = loadPrefs();
+var lang  = prefs.lang  || 'en';
+var dark  = prefs.dark  || false;
+
+// ─── TRANSLATIONS ─────────────────────────────
+var T = {
+  en:{
+    title:'I/O Reference Central',
+    sub:'Technical Reference: Wiring, Terminals, Specifications & Diagnostics',
+    langBtn:'Mudar para Português',
+    darkOn:'Dark Mode', darkOff:'Light Mode',
+    slbl:'Search Module or Keyword:', sph:'e.g. 1756-IB16, OB8E, sourcing, 120V AC...',
+    flbl:'Filter by Family:', fall:'All Families',
+    tlbl:'Filter by Type:', tall:'All Types',
+    specSec:'Technical Specifications', faultSec:'Faults / Diagnostics',
+    imgCap:'Wiring example — ', noImg:'Add image to GitHub repository',
+    fsBtn:'Full Screen', noRes:'No modules found for your search.',
+    lbHint:'Scroll to zoom · Drag to pan · Pinch on mobile',
+    lbClose:'Close',
+    obsBtn:'Wiring Pages',
+    lifecycle:{active:'Active',activeMature:'Active Mature',endOfLife:'End of Life',discontinued:'Discontinued'},
+    // modal
+    mSub:'Technical Reference — Wiring, Terminals, Specifications & Diagnostics',
+    mVer:'Version', mCache:'Cache Name', mMod:'Modules', mFam:'Families',
+    mSrc:'Sources', mDev:'Developer', mPwa:'Published via', mFoot:'Click the logo anytime to view this information.'
+  },
+  pt:{
+    title:'Central de I/O',
+    sub:'Referência Técnica: Ligação, Bornes, Especificações e Diagnósticos',
+    langBtn:'Switch to English',
+    darkOn:'Modo Escuro', darkOff:'Modo Claro',
+    slbl:'Pesquisar Módulo ou Palavra-chave:', sph:'Ex: 1756-IB16, OB8E, sourcing, 120V CA...',
+    flbl:'Filtrar por Família:', fall:'Todas as Famílias',
+    tlbl:'Filtrar por Tipo:', tall:'Todos os Tipos',
+    specSec:'Especificações Técnicas', faultSec:'Falhas / Diagnósticos',
+    imgCap:'Exemplo de ligação — ', noImg:'Adicione a imagem no repositório GitHub',
+    fsBtn:'Tela Cheia', noRes:'Nenhum módulo encontrado.',
+    lbHint:'Scroll para zoom · Arraste para mover · Pinch no celular',
+    lbClose:'Fechar',
+    obsBtn:'Páginas de Ligação',
+    lifecycle:{active:'Active',activeMature:'Active Mature',endOfLife:'End of Life',discontinued:'Discontinued'},
+    // modal
+    mSub:'Referência Técnica — Ligação, Bornes, Especificações e Diagnósticos',
+    mVer:'Versão', mCache:'Cache', mMod:'Módulos', mFam:'Famílias',
+    mSrc:'Fontes', mDev:'Desenvolvedor', mPwa:'Publicado via', mFoot:'Clique no logo a qualquer momento para ver estas informações.'
+  }
+};
+
+// ─── FAMILY CONFIG ────────────────────────────
+var FAM = {
+  clx:   {label:'ControlLogix 1756', lifecycle:'Active',        obs:false},
+  cplx:  {label:'CompactLogix 1769', lifecycle:'Active Mature', obs:true },
+  point: {label:'POINT I/O 1734',    lifecycle:'Active',        obs:false},
+  flex:  {label:'FLEX I/O 1794',     lifecycle:'Active Mature', obs:false}
+};
+function tagCls(type) {
+  if (!type) return 't-clx-sp';
+  if (type.indexOf('DI-AC')===0||type.indexOf('DO-AC')===0) return 't-clx-ac';
+  if (type==='DO-Contact') return 't-clx-sp';
+  if (type.indexOf('DI-DC')===0) return 't-clx-dc';
+  if (type.indexOf('DO-DC')===0) return 't-clx-out';
+  if (type==='AI'||type==='AO') return 't-clx-dc';
+  if (type==='Adapter') return 't-point';
+  return 't-clx-sp';
+}
+
+function normalizeLifecycleStatus(status) {
+  var s = (status || '').toString().trim().toLowerCase().replace(/[_-]+/g,' ');
+  if (s === 'active') return {key:'active', cls:'lifecycle-active'};
+  if (s === 'active mature') return {key:'activeMature', cls:'lifecycle-active-mature'};
+  if (s === 'end of life' || s === 'eol') return {key:'endOfLife', cls:'lifecycle-end-of-life'};
+  if (s === 'discontinued' || s === 'obsolete' || s === 'obsoleto') return {key:'discontinued', cls:'lifecycle-discontinued'};
+  return {key:'active', cls:'lifecycle-active'};
+}
+function getLifecycleStatus(item, fam) {
+  return item.lifecycle || item.status || (fam && fam.lifecycle) || null;
+}
+function lifecycleBadgeHtml(item, fam) {
+  var status = getLifecycleStatus(item, fam);
+  if (!status) return '';
+  var info = normalizeLifecycleStatus(status);
+  var label = (T[lang].lifecycle && T[lang].lifecycle[info.key]) || status;
+  return '<span class="lifecycle-badge ' + info.cls + '" title="Rockwell Automation Lifecycle Status">' + label + '</span>';
+}
+
+// ─── DATA ─────────────────────────────────────
+var DB = [
+
+// ══════════════════════════════════════════════
+// CONTROLLOGIX 1756  (manual 1756-UM058K)
+// ══════════════════════════════════════════════
+
+// ── AC INPUTS ──
+{cat:'1756-IA8D',fam:'clx',type:'DI-AC',
+ name:{en:'8-Pt Diagnostic AC Input — 79…132V AC',pt:'Entrada AC Diagnóstica 8 pontos — 79…132V CA'},
+ img:null,alt:{en:'1756-IA8D wiring',pt:'Ligação 1756-IA8D'},
+ specs:{
+  en:[['Points','8 inputs — 2 groups of 4'],['Voltage range','79…132V AC'],['Frequency','47…63 Hz'],['ON current min','5 mA @ 79V AC'],['Diagnostics','Open-wire, field power loss per group'],['LED','ST + FLT per channel'],['RTB (terminal)','1756-TBNH (20-pin)'],['IFM','1492-IFM20D120 / 1492-IFM20D120N']],
+  pt:[['Pontos','8 entradas — 2 grupos de 4'],['Faixa de tensão','79…132V CA'],['Frequência','47…63 Hz'],['Corrente ON mín','5 mA @ 79V CA'],['Diagnóstico','Fio aberto, perda de campo por grupo'],['LED','ST + FLT por canal'],['Borne (RTB)','1756-TBNH (20 pinos)'],['IFM','1492-IFM20D120 / 1492-IFM20D120N']]},
+ faults:[
+  {code:'FLT LED',d:{en:'Channel fault — open wire or blown fuse',pt:'Falha de canal — fio aberto ou fusível queimado'}},
+  {code:'Loss of Field Power',d:{en:'L1/L2 AC voltage missing on group',pt:'Tensão CA ausente no grupo — verificar L1/L2'}},
+  {code:'COMM FAULT',d:{en:'Backplane comms loss — check slot/rack',pt:'Perda de comms backplane — verificar slot/rack'}}]},
+
+{cat:'1756-IA16 / IA16K',fam:'clx',type:'DI-AC',
+ name:{en:'16-Pt AC Input — 74…132V AC',pt:'Entrada AC 16 pontos — 74…132V CA'},
+ img:null,alt:{en:'1756-IA16 wiring',pt:'Ligação 1756-IA16'},
+ specs:{
+  en:[['Points','16 inputs — 2 groups of 8'],['Voltage range','74…132V AC'],['Frequency','47…63 Hz'],['ON current min','5 mA @ 74V AC'],['RTB (terminal)','1756-TBNH (20-pin)'],['IFM','1492-IFM20D120 / 1492-IFM20F-3'],['K variant','Conformal coat']],
+  pt:[['Pontos','16 entradas — 2 grupos de 8'],['Faixa de tensão','74…132V CA'],['Frequência','47…63 Hz'],['Corrente ON mín','5 mA @ 74V CA'],['Borne (RTB)','1756-TBNH (20 pinos)'],['IFM','1492-IFM20D120 / 1492-IFM20F-3'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}},
+  {code:'Module Fault',d:{en:'Check electronic keying in Studio 5000',pt:'Verificar keying eletrônico no Studio 5000'}}]},
+
+{cat:'1756-IA16I / IA16IK',fam:'clx',type:'DI-AC',
+ name:{en:'16-Pt Isolated AC Input — 79…132V AC',pt:'Entrada AC Isolada 16 pontos — 79…132V CA'},
+ img:null,alt:{en:'1756-IA16I wiring',pt:'Ligação 1756-IA16I'},
+ specs:{
+  en:[['Points','16 individually isolated inputs'],['Voltage range','79…132V AC'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40DS120A-4 / 1492-IFM40F-FSA-4'],['Jumper bar','1756-JMPR (cut to length)']],
+  pt:[['Pontos','16 entradas individualmente isoladas'],['Faixa de tensão','79…132V CA'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40DS120A-4 / 1492-IFM40F-FSA-4'],['Jumper','1756-JMPR (cortar no comprimento)']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-IA32 / IA32K',fam:'clx',type:'DI-AC',
+ name:{en:'32-Pt AC Input — 74…132V AC',pt:'Entrada AC 32 pontos — 74…132V CA'},
+ img:null,alt:{en:'1756-IA32 wiring',pt:'Ligação 1756-IA32'},
+ specs:{
+  en:[['Points','32 inputs — 2 groups of 16'],['Voltage range','74…132V AC'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40F / 1492-IFM40F-2'],['K variant','Conformal coat']],
+  pt:[['Pontos','32 entradas — 2 grupos de 16'],['Faixa de tensão','74…132V CA'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40F / 1492-IFM40F-2'],['Variante K','Conformal coat']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-IM16I / IM16IK',fam:'clx',type:'DI-AC',
+ name:{en:'16-Pt Isolated AC Input — 159…265V AC',pt:'Entrada AC Isolada 16 pontos — 159…265V CA'},
+ img:null,alt:{en:'1756-IM16I wiring',pt:'Ligação 1756-IM16I'},
+ specs:{
+  en:[['Points','16 individually isolated inputs'],['Nominal voltage','200/240V AC'],['Voltage range','159…265V AC'],['Frequency','47…63 Hz'],['RTB (terminal)','1756-TBCH (40-pin)'],['Jumper bar','1756-JMPR']],
+  pt:[['Pontos','16 entradas individualmente isoladas'],['Tensão nominal','200/240V CA'],['Faixa de tensão','159…265V CA'],['Frequência','47…63 Hz'],['Borne (RTB)','1756-TBCH (40 pinos)'],['Jumper','1756-JMPR']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-IN16 / IN16K',fam:'clx',type:'DI-AC',
+ name:{en:'16-Pt AC Input — 10…30V AC',pt:'Entrada AC 16 pontos — 10…30V CA'},
+ img:null,alt:{en:'1756-IN16 wiring',pt:'Ligação 1756-IN16'},
+ specs:{
+  en:[['Points','16 inputs — 2 groups of 8'],['Nominal voltage','24V AC'],['Voltage range','10…30V AC'],['Frequency','47…63 Hz'],['RTB (terminal)','1756-TBNH (20-pin)']],
+  pt:[['Pontos','16 entradas — 2 grupos de 8'],['Tensão nominal','24V CA'],['Faixa de tensão','10…30V CA'],['Frequência','47…63 Hz'],['Borne (RTB)','1756-TBNH (20 pinos)']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+// ── DC INPUTS ──
+{cat:'1756-IB16 / IB16K / IB16XT',fam:'clx',type:'DI-DC',
+ name:{en:'16-Pt DC Sinking Input — 10…31.2V DC',pt:'Entrada DC Sinking 16 pontos — 10…31,2V CC'},
+ img:null,alt:{en:'1756-IB16 wiring',pt:'Ligação 1756-IB16'},
+ specs:{
+  en:[['Points','16 sinking inputs — 2 groups of 8'],['Nominal voltage','24V DC'],['Voltage range','10…31.2V DC'],['ON current min','2 mA @ 10V'],['OFF current max','1.5 mA'],['RTB (terminal)','1756-TBNH (20-pin)'],['IFM','1492-IFM20D24 / 1492-IFM20D24N'],['XT variant','Conformal coat']],
+  pt:[['Pontos','16 entradas sinking — 2 grupos de 8'],['Tensão nominal','24V CC'],['Faixa de tensão','10…31,2V CC'],['Corrente ON mín','2 mA @ 10V'],['Corrente OFF máx','1,5 mA'],['Borne (RTB)','1756-TBNH (20 pinos)'],['IFM','1492-IFM20D24 / 1492-IFM20D24N'],['Variante XT','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Backplane comms loss — check slot/rack',pt:'Perda de comms backplane — verificar slot/rack'}},
+  {code:'Module Fault',d:{en:'Check electronic keying in Studio 5000',pt:'Verificar keying eletrônico no Studio 5000'}}]},
+
+{cat:'1756-IB16D / IB16DK',fam:'clx',type:'DI-DC',
+ name:{en:'16-Pt Diagnostic DC Input — 10…30V DC',pt:'Entrada DC Diagnóstica 16 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-IB16D wiring',pt:'Ligação 1756-IB16D'},
+ specs:{
+  en:[['Points','16 diagnostic inputs — 4 groups of 4'],['Voltage range','10…30V DC'],['Diagnostics','Open-wire per channel (leakage resistor needed)'],['Leakage resistor','15 kΩ / ¼W for 24V DC'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40F-F24AD-4 / 1492-IFM40F-FS24A-4']],
+  pt:[['Pontos','16 entradas diagnósticas — 4 grupos de 4'],['Faixa de tensão','10…30V CC'],['Diagnóstico','Fio aberto por canal (resistor de leakage necessário)'],['Resistor leakage','15 kΩ / ¼W para 24V CC'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40F-F24AD-4 / 1492-IFM40F-FS24A-4']]},
+ faults:[
+  {code:'Open Wire (FLT)',d:{en:'Open wire detected — check leakage resistor and wiring',pt:'Fio aberto detectado — verificar resistor de leakage e fiação'}},
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-IB16I / IB16IK',fam:'clx',type:'DI-DC',
+ name:{en:'16-Pt Isolated DC Input — 10…30V DC',pt:'Entrada DC Isolada 16 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-IB16I wiring',pt:'Ligação 1756-IB16I'},
+ specs:{
+  en:[['Points','16 individually isolated inputs'],['Voltage range','10…30V DC'],['Wiring','Sinking or sourcing (per jumper)'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40F / 1492-IFM40DS24A-4'],['Jumper bar','1756-JMPR']],
+  pt:[['Pontos','16 entradas individualmente isoladas'],['Faixa de tensão','10…30V CC'],['Ligação','Sinking ou sourcing (por jumper)'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40F / 1492-IFM40DS24A-4'],['Jumper','1756-JMPR']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-IB16IF / IB16IFK',fam:'clx',type:'DI-DC',
+ name:{en:'16-Pt Isolated Fast DC Input — 10…30V DC',pt:'Entrada DC Rápida Isolada 16 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-IB16IF wiring',pt:'Ligação 1756-IB16IF'},
+ specs:{
+  en:[['Points','16 isolated fast inputs (peer control)'],['Voltage range','10…30V DC'],['Response time','< 50 µs'],['Wiring','Sinking or sourcing'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40F / 1492-IFM40DS24A-4']],
+  pt:[['Pontos','16 entradas isoladas rápidas (peer control)'],['Faixa de tensão','10…30V CC'],['Tempo de resposta','< 50 µs'],['Ligação','Sinking ou sourcing'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40F / 1492-IFM40DS24A-4']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}},
+  {code:'Peer Fault',d:{en:'Peer-to-peer comms fault — check data production config',pt:'Falha de comms peer-to-peer — verificar configuração de produção de dados'}}]},
+
+{cat:'1756-IB32 / IB32K / IB32XT',fam:'clx',type:'DI-DC',
+ name:{en:'32-Pt DC Sinking Input — 10…31.2V DC',pt:'Entrada DC Sinking 32 pontos — 10…31,2V CC'},
+ img:null,alt:{en:'1756-IB32 wiring',pt:'Ligação 1756-IB32'},
+ specs:{
+  en:[['Points','32 sinking inputs — 2 groups of 16'],['Voltage range','10…31.2V DC'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40F / 1492-IFM40D24'],['XT variant','Conformal coat']],
+  pt:[['Pontos','32 entradas sinking — 2 grupos de 16'],['Faixa de tensão','10…31,2V CC'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40F / 1492-IFM40D24'],['Variante XT','Conformal coat']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-IC16',fam:'clx',type:'DI-DC',
+ name:{en:'16-Pt DC Input — 30…60V DC',pt:'Entrada DC 16 pontos — 30…60V CC'},
+ img:null,alt:{en:'1756-IC16 wiring',pt:'Ligação 1756-IC16'},
+ specs:{
+  en:[['Points','16 inputs — 2 groups of 8'],['Nominal voltage','48V DC'],['Voltage range','30…60V DC'],['RTB (terminal)','1756-TBNH (20-pin)'],['Typical use','48V DC power systems']],
+  pt:[['Pontos','16 entradas — 2 grupos de 8'],['Tensão nominal','48V CC'],['Faixa de tensão','30…60V CC'],['Borne (RTB)','1756-TBNH (20 pinos)'],['Aplicação','Sistemas com fonte 48V CC']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-IG16 / IG16K',fam:'clx',type:'DI-DC',
+ name:{en:'16-Pt TTL Input — 5V DC',pt:'Entrada TTL 16 pontos — 5V CC'},
+ img:null,alt:{en:'1756-IG16 wiring',pt:'Ligação 1756-IG16'},
+ specs:{
+  en:[['Points','16 TTL inputs — 2 groups of 8'],['Nominal voltage','5V DC'],['HIGH level','≥ 2.0V'],['LOW level','≤ 0.8V'],['Circuit','74HCT14 Schmitt trigger'],['RTB (terminal)','1756-TBNH (20-pin)'],['WARNING','No reverse polarity protection']],
+  pt:[['Pontos','16 entradas TTL — 2 grupos de 8'],['Tensão nominal','5V CC'],['Nível HIGH','≥ 2,0V'],['Nível LOW','≤ 0,8V'],['Circuito','74HCT14 Schmitt trigger'],['Borne (RTB)','1756-TBNH (20 pinos)'],['ATENÇÃO','Sem proteção de polaridade inversa']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}},
+  {code:'Damage Risk',d:{en:'No reverse polarity protection — verify polarity before energizing',pt:'Sem proteção de polaridade inversa — verificar polaridade antes de energizar'}}]},
+
+{cat:'1756-IH16I / IH16IK',fam:'clx',type:'DI-DC',
+ name:{en:'16-Pt Isolated DC Input — 90…146V DC',pt:'Entrada DC Isolada 16 pontos — 90…146V CC'},
+ img:null,alt:{en:'1756-IH16I wiring',pt:'Ligação 1756-IH16I'},
+ specs:{
+  en:[['Points','16 individually isolated inputs'],['Nominal voltage','125V DC'],['Voltage range','90…146V DC'],['RTB (terminal)','1756-TBCH (40-pin)'],['Jumper bar','1756-JMPR']],
+  pt:[['Pontos','16 entradas individualmente isoladas'],['Tensão nominal','125V CC'],['Faixa de tensão','90…146V CC'],['Borne (RTB)','1756-TBCH (40 pinos)'],['Jumper','1756-JMPR']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-IV16 / IV16K',fam:'clx',type:'DI-DC',
+ name:{en:'16-Pt DC Sourcing Input — 10…30V DC',pt:'Entrada DC Sourcing 16 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-IV16 wiring',pt:'Ligação 1756-IV16'},
+ specs:{
+  en:[['Points','16 sourcing (PNP) inputs — 2 groups of 8'],['Voltage range','10…30V DC'],['RTB (terminal)','1756-TBNH (20-pin)']],
+  pt:[['Pontos','16 entradas sourcing (PNP) — 2 grupos de 8'],['Faixa de tensão','10…30V CC'],['Borne (RTB)','1756-TBNH (20 pinos)']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-IV32 / IV32K',fam:'clx',type:'DI-DC',
+ name:{en:'32-Pt DC Sourcing Input — 10…30V DC',pt:'Entrada DC Sourcing 32 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-IV32 wiring',pt:'Ligação 1756-IV32'},
+ specs:{
+  en:[['Points','32 sourcing (PNP) inputs — 2 groups of 16'],['Voltage range','10…30V DC'],['RTB (terminal)','1756-TBCH (40-pin)']],
+  pt:[['Pontos','32 entradas sourcing (PNP) — 2 grupos de 16'],['Faixa de tensão','10…30V CC'],['Borne (RTB)','1756-TBCH (40 pinos)']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+// ── AC OUTPUTS ──
+{cat:'1756-OA8',fam:'clx',type:'DO-AC',
+ name:{en:'8-Pt AC Output — 74…265V AC',pt:'Saída AC 8 pontos — 74…265V CA'},
+ img:null,alt:{en:'1756-OA8 wiring',pt:'Ligação 1756-OA8'},
+ specs:{
+  en:[['Points','8 TRIAC outputs — 1 group'],['Voltage range','74…265V AC'],['Current/point','2A @ 60 Hz'],['Total current','8A'],['Fuse','Not protected — fused IFM recommended'],['RTB (terminal)','1756-TBNH (20-pin)'],['IFM','1492-IFM20DS120-4 / 1492-IFM20F-FS120-2']],
+  pt:[['Pontos','8 saídas TRIAC — 1 grupo'],['Faixa de tensão','74…265V CA'],['Corrente/ponto','2A @ 60 Hz'],['Corrente total','8A'],['Fusível','Não protegido — recomendado IFM fusível'],['Borne (RTB)','1756-TBNH (20 pinos)'],['IFM','1492-IFM20DS120-4 / 1492-IFM20F-FS120-2']]},
+ faults:[
+  {code:'Output Overcurrent',d:{en:'Output current exceeded — check load and external fuse',pt:'Corrente de saída excedida — verificar carga e fusível externo'}},
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OA8D',fam:'clx',type:'DO-AC',
+ name:{en:'8-Pt Diagnostic AC Output — 74…132V AC',pt:'Saída AC Diagnóstica 8 pontos — 74…132V CA'},
+ img:null,alt:{en:'1756-OA8D wiring',pt:'Ligação 1756-OA8D'},
+ specs:{
+  en:[['Points','8 diagnostic TRIAC outputs'],['Voltage range','74…132V AC'],['Diagnostics','Short circuit, open load per channel'],['RTB (terminal)','1756-TBNH (20-pin)'],['IFM','1492-IFM20DS120-4 / 1492-IFM20F-FS120-4']],
+  pt:[['Pontos','8 saídas TRIAC diagnósticas'],['Faixa de tensão','74…132V CA'],['Diagnóstico','Curto-circuito, carga aberta por canal'],['Borne (RTB)','1756-TBNH (20 pinos)'],['IFM','1492-IFM20DS120-4 / 1492-IFM20F-FS120-4']]},
+ faults:[
+  {code:'FLT LED',d:{en:'Short circuit or open load detected on channel',pt:'Curto-circuito ou carga aberta detectada no canal'}},
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OA8E / OA8EK',fam:'clx',type:'DO-AC',
+ name:{en:'8-Pt Electronic-Fused AC Output — 74…132V AC',pt:'Saída AC Fusível Eletrônico 8 pontos — 74…132V CA'},
+ img:null,alt:{en:'1756-OA8E wiring',pt:'Ligação 1756-OA8E'},
+ specs:{
+  en:[['Points','8 electronic-fused TRIAC outputs'],['Voltage range','74…132V AC'],['Fuse','Electronic per channel (no physical fuse)'],['Diagnostics','Short circuit, field power loss'],['RTB (terminal)','1756-TBNH (20-pin)'],['IFM','1492-IFM20DS120-4']],
+  pt:[['Pontos','8 saídas TRIAC com fusível eletrônico'],['Faixa de tensão','74…132V CA'],['Fusível','Eletrônico por canal (sem fusível físico)'],['Diagnóstico','Curto-circuito, perda de alimentação de campo'],['Borne (RTB)','1756-TBNH (20 pinos)'],['IFM','1492-IFM20DS120-4']]},
+ faults:[
+  {code:'Electronic Fuse',d:{en:'Fuse tripped — remove short and reset output',pt:'Fusível eletrônico atuou — remover curto e resetar saída'}},
+  {code:'Field Power Loss',d:{en:'AC field voltage missing — check L1/L2',pt:'Tensão CA de campo ausente — verificar L1/L2'}}]},
+
+{cat:'1756-OA16 / OA16K',fam:'clx',type:'DO-AC',
+ name:{en:'16-Pt AC Output — 74…265V AC',pt:'Saída AC 16 pontos — 74…265V CA'},
+ img:null,alt:{en:'1756-OA16 wiring',pt:'Ligação 1756-OA16'},
+ specs:{
+  en:[['Points','16 TRIAC outputs — 2 groups of 8'],['Voltage range','74…265V AC'],['Current/point','1A @ 60 Hz'],['Mech. fuse','3.15A @ 250V AC per group — Littelfuse H2153.15'],['RTB (terminal)','1756-TBNH (20-pin)'],['IFM','1492-IFM20F / 1492-IFM20F-FS-2']],
+  pt:[['Pontos','16 saídas TRIAC — 2 grupos de 8'],['Faixa de tensão','74…265V CA'],['Corrente/ponto','1A @ 60 Hz'],['Fusível mecânico','3,15A @ 250V CA por grupo — Littelfuse H2153.15'],['Borne (RTB)','1756-TBNH (20 pinos)'],['IFM','1492-IFM20F / 1492-IFM20F-FS-2']]},
+ faults:[
+  {code:'Group Fuse',d:{en:'Mechanical group fuse blown — replace Littelfuse H2153.15',pt:'Fusível mecânico do grupo aberto — substituir Littelfuse H2153.15'}},
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OA16I / OA16IK',fam:'clx',type:'DO-AC',
+ name:{en:'16-Pt Isolated AC Output — 74…265V AC',pt:'Saída AC Isolada 16 pontos — 74…265V CA'},
+ img:null,alt:{en:'1756-OA16I wiring',pt:'Ligação 1756-OA16I'},
+ specs:{
+  en:[['Points','16 individually isolated TRIAC outputs'],['Voltage range','74…265V AC'],['Current/point','1A @ 60 Hz'],['Fuse','Not protected — use fused IFM'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40F-FS120-4']],
+  pt:[['Pontos','16 saídas TRIAC individualmente isoladas'],['Faixa de tensão','74…265V CA'],['Corrente/ponto','1A @ 60 Hz'],['Fusível','Não protegido — usar IFM fusível'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40F-FS120-4']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-ON8 / ON8K',fam:'clx',type:'DO-AC',
+ name:{en:'8-Pt AC Output — 10…30V AC',pt:'Saída AC 8 pontos — 10…30V CA'},
+ img:null,alt:{en:'1756-ON8 wiring',pt:'Ligação 1756-ON8'},
+ specs:{
+  en:[['Points','8 TRIAC outputs — 1 group'],['Nominal voltage','24V AC'],['Voltage range','10…30V AC'],['Current/point','1A'],['Fuse','Not protected'],['RTB (terminal)','1756-TBNH (20-pin)']],
+  pt:[['Pontos','8 saídas TRIAC — 1 grupo'],['Tensão nominal','24V CA'],['Faixa de tensão','10…30V CA'],['Corrente/ponto','1A'],['Fusível','Não protegido'],['Borne (RTB)','1756-TBNH (20 pinos)']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+// ── DC OUTPUTS ──
+{cat:'1756-OB8 / OB8K',fam:'clx',type:'DO-DC',
+ name:{en:'8-Pt DC Sourcing Output — 10…30V DC',pt:'Saída DC Sourcing 8 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-OB8 wiring',pt:'Ligação 1756-OB8'},
+ specs:{
+  en:[['Points','8 sourcing outputs — 1 group'],['Voltage range','10…30V DC'],['Current/point','2A'],['Fuse','Not protected — use fused IFM'],['RTB (terminal)','1756-TBNH (20-pin)'],['IFM','1492-IFM20DS24-4 / 1492-IFM20F-FS24-2']],
+  pt:[['Pontos','8 saídas sourcing — 1 grupo'],['Faixa de tensão','10…30V CC'],['Corrente/ponto','2A'],['Fusível','Não protegido — usar IFM fusível'],['Borne (RTB)','1756-TBNH (20 pinos)'],['IFM','1492-IFM20DS24-4 / 1492-IFM20F-FS24-2']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OB8EI / OB8EIK',fam:'clx',type:'DO-DC',
+ name:{en:'8-Pt Electronic-Fused Isolated DC Output — 10…30V DC',pt:'Saída DC Fusível Eletrônico Isolada 8 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-OB8EI wiring',pt:'Ligação 1756-OB8EI'},
+ specs:{
+  en:[['Points','8 isolated outputs with electronic fuse per point'],['Voltage range','10…30V DC'],['Current/point','2A'],['Fuse','Electronic per channel'],['Diagnostics','Short circuit, open load'],['RTB (terminal)','1756-TBNH (20-pin)']],
+  pt:[['Pontos','8 saídas isoladas com fusível eletrônico por ponto'],['Faixa de tensão','10…30V CC'],['Corrente/ponto','2A'],['Fusível','Eletrônico por canal'],['Diagnóstico','Curto-circuito, carga aberta'],['Borne (RTB)','1756-TBNH (20 pinos)']]},
+ faults:[
+  {code:'Electronic Fuse',d:{en:'Fuse tripped — check load and reset',pt:'Fusível eletrônico atuou — verificar carga e resetar'}},
+  {code:'Open Load',d:{en:'Open load detected on output',pt:'Carga aberta detectada na saída'}}]},
+
+{cat:'1756-OB16D / OB16DK',fam:'clx',type:'DO-DC',
+ name:{en:'16-Pt Diagnostic DC Output — 19.2…30V DC',pt:'Saída DC Diagnóstica 16 pontos — 19,2…30V CC'},
+ img:null,alt:{en:'1756-OB16D wiring',pt:'Ligação 1756-OB16D'},
+ specs:{
+  en:[['Points','16 diagnostic sourcing outputs — 4 groups of 4'],['Voltage range','19.2…30V DC'],['Current/point','1A'],['Fuse','Electronic per point'],['Diagnostics','Short circuit, open load, open wire'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40F-F24D-2 / 1492-IFM40F-FS24-2']],
+  pt:[['Pontos','16 saídas sourcing diagnósticas — 4 grupos de 4'],['Faixa de tensão','19,2…30V CC'],['Corrente/ponto','1A'],['Fusível','Eletrônico por ponto'],['Diagnóstico','Curto-circuito, carga aberta, fio aberto'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40F-F24D-2 / 1492-IFM40F-FS24-2']]},
+ faults:[
+  {code:'FLT (Short/Open)',d:{en:'Short or open load detected — FLT LED lit on channel',pt:'Curto ou carga aberta detectada — LED FLT aceso no canal'}},
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OB16E / OB16EK',fam:'clx',type:'DO-DC',
+ name:{en:'16-Pt Electronic-Fused DC Output — 10…31.2V DC',pt:'Saída DC Fusível Eletrônico 16 pontos — 10…31,2V CC'},
+ img:null,alt:{en:'1756-OB16E wiring',pt:'Ligação 1756-OB16E'},
+ specs:{
+  en:[['Points','16 sourcing outputs — 2 groups of 8'],['Voltage range','10…31.2V DC'],['Current/point','2A continuous'],['Fuse','Electronic per point'],['Diagnostics','Short circuit, open load per channel'],['LED','Green ON / Red FAULT'],['RTB (terminal)','1756-TBNH (20-pin)']],
+  pt:[['Pontos','16 saídas sourcing — 2 grupos de 8'],['Faixa de tensão','10…31,2V CC'],['Corrente/ponto','2A contínuos'],['Fusível','Eletrônico por ponto'],['Diagnóstico','Curto-circuito, carga aberta por canal'],['LED','Verde ON / Vermelho FAULT'],['Borne (RTB)','1756-TBNH (20 pinos)']]},
+ faults:[
+  {code:'Electronic Fuse',d:{en:'Fuse tripped — remove short and reset output',pt:'Fusível eletrônico atuou — remover curto e resetar saída'}},
+  {code:'Open Load',d:{en:'Output ON but no current draw detected',pt:'Saída ON mas sem consumo de corrente detectado'}},
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OB16I',fam:'clx',type:'DO-DC',
+ name:{en:'16-Pt Isolated DC Output — 10…30V DC',pt:'Saída DC Isolada 16 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-OB16I wiring',pt:'Ligação 1756-OB16I'},
+ specs:{
+  en:[['Points','16 individually isolated outputs'],['Voltage range','10…30V DC'],['Current/point','2A'],['Fuse','Not protected — use fused IFM'],['RTB (terminal)','1756-TBCH (40-pin)']],
+  pt:[['Pontos','16 saídas individualmente isoladas'],['Faixa de tensão','10…30V CC'],['Corrente/ponto','2A'],['Fusível','Não protegido — usar IFM fusível'],['Borne (RTB)','1756-TBCH (40 pinos)']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OB16IEF / OB16IEFK',fam:'clx',type:'DO-DC',
+ name:{en:'16-Pt Isolated Fast DC Output — 10…30V DC',pt:'Saída DC Rápida Isolada 16 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-OB16IEF wiring',pt:'Ligação 1756-OB16IEF'},
+ specs:{
+  en:[['Points','16 isolated fast outputs (peer control)'],['Voltage range','10…30V DC'],['Response time','< 50 µs'],['Fuse','Electronic per point'],['RTB (terminal)','1756-TBCH (40-pin)']],
+  pt:[['Pontos','16 saídas isoladas rápidas (peer control)'],['Faixa de tensão','10…30V CC'],['Tempo de resposta','< 50 µs'],['Fusível','Eletrônico por ponto'],['Borne (RTB)','1756-TBCH (40 pinos)']]},
+ faults:[
+  {code:'Electronic Fuse',d:{en:'Fuse tripped — check load',pt:'Fusível eletrônico atuou — verificar carga'}},
+  {code:'Peer Fault',d:{en:'Peer-to-peer communication fault',pt:'Falha de comunicação peer-to-peer'}}]},
+
+{cat:'1756-OB16IEFS / OB16IEFSK',fam:'clx',type:'DO-DC',
+ name:{en:'16-Pt Isolated Fast Scheduled DC Output — 10…30V DC',pt:'Saída DC Rápida Escalonada Isolada 16 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-OB16IEFS wiring',pt:'Ligação 1756-OB16IEFS'},
+ specs:{
+  en:[['Points','16 isolated fast scheduled outputs'],['Voltage range','10…30V DC'],['Fuse','Electronic per point'],['Scheduling','Synchronized with CST (Coordinated System Time)'],['RTB (terminal)','1756-TBCH (40-pin)']],
+  pt:[['Pontos','16 saídas isoladas rápidas escalonadas'],['Faixa de tensão','10…30V CC'],['Fusível','Eletrônico por ponto'],['Escalonamento','Sincronizado com CST (Coordinated System Time)'],['Borne (RTB)','1756-TBCH (40 pinos)']]},
+ faults:[
+  {code:'Electronic Fuse',d:{en:'Fuse tripped',pt:'Fusível eletrônico atuou'}},
+  {code:'CST Sync Fault',d:{en:'CST sync fault — check Logix and network config',pt:'Falha de sincronização CST — verificar Logix e rede'}}]},
+
+{cat:'1756-OB32 / OB32K / OB32XT',fam:'clx',type:'DO-DC',
+ name:{en:'32-Pt DC Sourcing Output — 10…31.2V DC',pt:'Saída DC Sourcing 32 pontos — 10…31,2V CC'},
+ img:null,alt:{en:'1756-OB32 wiring',pt:'Ligação 1756-OB32'},
+ specs:{
+  en:[['Points','32 sourcing outputs — 2 groups of 16'],['Voltage range','10…31.2V DC'],['Current/point','1A'],['Fuse','Not protected — use fused IFM'],['RTB (terminal)','1756-TBCH (40-pin)'],['XT variant','Conformal coat']],
+  pt:[['Pontos','32 saídas sourcing — 2 grupos de 16'],['Faixa de tensão','10…31,2V CC'],['Corrente/ponto','1A'],['Fusível','Não protegido — usar IFM fusível'],['Borne (RTB)','1756-TBCH (40 pinos)'],['Variante XT','Conformal coat']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OC8 / OC8K',fam:'clx',type:'DO-DC',
+ name:{en:'8-Pt DC Output — 30…60V DC',pt:'Saída DC 8 pontos — 30…60V CC'},
+ img:null,alt:{en:'1756-OC8 wiring',pt:'Ligação 1756-OC8'},
+ specs:{
+  en:[['Points','8 sourcing outputs — 1 group'],['Nominal voltage','48V DC'],['Voltage range','30…60V DC'],['Current/point','2A'],['Fuse','Not protected'],['RTB (terminal)','1756-TBNH (20-pin)']],
+  pt:[['Pontos','8 saídas sourcing — 1 grupo'],['Tensão nominal','48V CC'],['Faixa de tensão','30…60V CC'],['Corrente/ponto','2A'],['Fusível','Não protegido'],['Borne (RTB)','1756-TBNH (20 pinos)']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OG16 / OG16K',fam:'clx',type:'DO-DC',
+ name:{en:'16-Pt TTL Output — 5V DC',pt:'Saída TTL 16 pontos — 5V CC'},
+ img:null,alt:{en:'1756-OG16 wiring',pt:'Ligação 1756-OG16'},
+ specs:{
+  en:[['Points','16 TTL outputs — 2 groups of 8'],['Nominal voltage','5V DC'],['Current/point','25 mA'],['HIGH output level','≥ 3.76V'],['RTB (terminal)','1756-TBNH (20-pin)'],['WARNING','No reverse polarity protection']],
+  pt:[['Pontos','16 saídas TTL — 2 grupos de 8'],['Tensão nominal','5V CC'],['Corrente/ponto','25 mA'],['Nível HIGH saída','≥ 3,76V'],['Borne (RTB)','1756-TBNH (20 pinos)'],['ATENÇÃO','Sem proteção de polaridade inversa']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OH8I',fam:'clx',type:'DO-DC',
+ name:{en:'8-Pt Isolated DC Output — 90…146V DC',pt:'Saída DC Isolada 8 pontos — 90…146V CC'},
+ img:null,alt:{en:'1756-OH8I wiring',pt:'Ligação 1756-OH8I'},
+ specs:{
+  en:[['Points','8 individually isolated outputs'],['Nominal voltage','125V DC'],['Voltage range','90…146V DC'],['Current/point','1A'],['Fuse','Not protected'],['RTB (terminal)','1756-TBNH (20-pin)']],
+  pt:[['Pontos','8 saídas individualmente isoladas'],['Tensão nominal','125V CC'],['Faixa de tensão','90…146V CC'],['Corrente/ponto','1A'],['Fusível','Não protegido'],['Borne (RTB)','1756-TBNH (20 pinos)']]},
+ faults:[{code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OV16E',fam:'clx',type:'DO-DC',
+ name:{en:'16-Pt Electronic-Fused Sinking DC Output — 10…30V DC',pt:'Saída DC Sinking Fusível Eletrônico 16 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-OV16E wiring',pt:'Ligação 1756-OV16E'},
+ specs:{
+  en:[['Points','16 sinking (NPN) outputs with electronic fuse'],['Voltage range','10…30V DC'],['Current/point','2A'],['Fuse','Electronic per point'],['RTB (terminal)','1756-TBNH (20-pin)']],
+  pt:[['Pontos','16 saídas sinking (NPN) com fusível eletrônico'],['Faixa de tensão','10…30V CC'],['Corrente/ponto','2A'],['Fusível','Eletrônico por ponto'],['Borne (RTB)','1756-TBNH (20 pinos)']]},
+ faults:[
+  {code:'Electronic Fuse',d:{en:'Fuse tripped — check load and reset',pt:'Fusível eletrônico atuou — verificar carga e resetar'}},
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+{cat:'1756-OV32E / OV32EK',fam:'clx',type:'DO-DC',
+ name:{en:'32-Pt Electronic-Fused Sinking DC Output — 10…30V DC',pt:'Saída DC Sinking Fusível Eletrônico 32 pontos — 10…30V CC'},
+ img:null,alt:{en:'1756-OV32E wiring',pt:'Ligação 1756-OV32E'},
+ specs:{
+  en:[['Points','32 sinking (NPN) outputs with electronic fuse — 2 groups of 16'],['Voltage range','10…30V DC'],['Current/point','1A'],['Fuse','Electronic per point'],['RTB (terminal)','1756-TBCH (40-pin)']],
+  pt:[['Pontos','32 saídas sinking (NPN) com fusível eletrônico — 2 grupos de 16'],['Faixa de tensão','10…30V CC'],['Corrente/ponto','1A'],['Fusível','Eletrônico por ponto'],['Borne (RTB)','1756-TBCH (40 pinos)']]},
+ faults:[
+  {code:'Electronic Fuse',d:{en:'Fuse tripped — check load and reset',pt:'Fusível eletrônico atuou — verificar carga e resetar'}},
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}}]},
+
+// ── CONTACT OUTPUTS ──
+{cat:'1756-OW16I / OW16IK',fam:'clx',type:'DO-Contact',
+ name:{en:'16-Pt Isolated Contact Output — 10…265V AC / 5…150V DC',pt:'Saída Contato Isolado 16 pontos — 10…265V CA / 5…150V CC'},
+ img:null,alt:{en:'1756-OW16I wiring',pt:'Ligação 1756-OW16I'},
+ specs:{
+  en:[['Points','16 individually isolated relay outputs'],['AC voltage','10…265V AC'],['DC voltage','5…150V DC'],['Current/point','2A @ 240V AC / 2A @ 30V DC'],['Contact type','SPST — Normally open (Form A)'],['Fuse','Not protected — use fused IFM'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40F-FS-4 / 1492-IFM40F-FS240-4']],
+  pt:[['Pontos','16 saídas relé individualmente isoladas'],['Tensão CA','10…265V CA'],['Tensão CC','5…150V CC'],['Corrente/ponto','2A @ 240V CA / 2A @ 30V CC'],['Tipo de contato','SPST — Normalmente aberto (Form A)'],['Fusível','Não protegido — usar IFM fusível'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40F-FS-4 / 1492-IFM40F-FS240-4']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}},
+  {code:'Welded Contact',d:{en:'Contact welded by overcurrent — replace module',pt:'Contato soldado por sobrecorrente — substituir módulo'}}]},
+
+{cat:'1756-OX8I / OX8IK',fam:'clx',type:'DO-Contact',
+ name:{en:'8-Pt Isolated Contact Output — 10…265V AC / 5…150V DC',pt:'Saída Contato Isolado 8 pontos — 10…265V CA / 5…150V CC'},
+ img:null,alt:{en:'1756-OX8I wiring',pt:'Ligação 1756-OX8I'},
+ specs:{
+  en:[['Points','8 individually isolated relay outputs'],['AC voltage','10…265V AC'],['DC voltage','5…150V DC'],['Current/point','2A @ 240V AC'],['Contact type','Form A (NO) + Form B (NC) per channel'],['Fuse','Not protected — use fused IFM'],['RTB (terminal)','1756-TBCH (40-pin)'],['IFM','1492-IFM40F-FS24-2 / 1492-IFM40F-FS240-4']],
+  pt:[['Pontos','8 saídas relé individualmente isoladas'],['Tensão CA','10…265V CA'],['Tensão CC','5…150V CC'],['Corrente/ponto','2A @ 240V CA'],['Tipo de contato','Form A (NA) + Form B (NF) por canal'],['Fusível','Não protegido — usar IFM fusível'],['Borne (RTB)','1756-TBCH (40 pinos)'],['IFM','1492-IFM40F-FS24-2 / 1492-IFM40F-FS240-4']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Backplane communication loss',pt:'Perda de comunicação backplane'}},
+  {code:'Welded Contact',d:{en:'Contact welded by overcurrent — replace module',pt:'Contato soldado por sobrecorrente — substituir módulo'}}]},
+
+// ══════════════════════════════════════════════
+// POINT I/O 1734  (manual 1734-UM001F)
+// ══════════════════════════════════════════════
+
+// ── ADAPTERS ──
+{cat:'1734-AENT',fam:'point',type:'Adapter',
+ name:{en:'EtherNet/IP Adapter for POINT I/O',pt:'Adaptador EtherNet/IP para POINT I/O'},
+ img:null,alt:{en:'1734-AENT wiring',pt:'Ligação 1734-AENT'},
+ specs:{
+  en:[['Protocol','EtherNet/IP (CIP)'],['Speed','10/100 Mbps, auto-negotiate'],['Addressing','DIP switch or BOOTP/DHCP'],['Max modules','Up to 63 POINT I/O modules'],['Supply voltage','24V DC — 70 mA on bus'],['Connector','RJ-45 (1 port)'],['Mounting','DIN rail / panel']],
+  pt:[['Protocolo','EtherNet/IP (CIP)'],['Velocidade','10/100 Mbps, auto-negociação'],['Endereçamento','DIP switch ou BOOTP/DHCP'],['Máx módulos','Até 63 módulos POINT I/O'],['Alimentação','24V CC — 70 mA no barramento'],['Conector','RJ-45 (1 porta)'],['Montagem','Trilho DIN / painel']]},
+ faults:[
+  {code:'MS Off',d:{en:'No power — apply 24V DC to adapter',pt:'Sem alimentação — aplicar 24V CC no adaptador'}},
+  {code:'MS Flashing Green',d:{en:'Commissioning needed — configure the device properly',pt:'Comissionamento necessário — configurar o dispositivo'}},
+  {code:'MS Steady Red',d:{en:'Unrecoverable fault — replace adapter',pt:'Falha irrecuperável — substituir adaptador'}},
+  {code:'NS Flashing Green',d:{en:'Online, no connections established — device in Idle/Program mode',pt:'Online, sem conexões estabelecidas — dispositivo em modo Idle/Program'}},
+  {code:'NS Flashing Red',d:{en:'I/O connection timeout — check for module failure',pt:'Timeout de conexão I/O — verificar falha de módulo'}},
+  {code:'NS Steady Red',d:{en:'Critical link failure — verify adapter and terminal bases',pt:'Falha crítica de link — verificar adaptador e bases de terminal'}}]},
+
+// ── DC SINKING INPUTS ──
+{cat:'1734-IB2',fam:'point',type:'DI-DC',
+ name:{en:'2-Pt DC Sinking Input — 24V DC',pt:'Entrada DC Sinking 2 pontos — 24V CC'},
+ img:null,alt:{en:'1734-IB2 wiring',pt:'Ligação 1734-IB2'},
+ specs:{
+  en:[['Points','2 sinking inputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Filter time','0…65 ms (1 ms default)'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow — input ON']],
+  pt:[['Pontos','2 entradas sinking'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Filtro de entrada','0…65 ms (padrão 1 ms)'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo — entrada ativa']]},
+ faults:[
+  {code:'MS Flashing Green',d:{en:'Module needs commissioning — configure in Studio 5000',pt:'Módulo requer comissionamento — configurar no Studio 5000'}},
+  {code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power; if persists, replace',pt:'Falha recuperável — ciclar alimentação; se persistir, substituir'}}]},
+
+{cat:'1734-IB4 / IB4K',fam:'point',type:'DI-DC',
+ name:{en:'4-Pt DC Sinking Input — 24V DC',pt:'Entrada DC Sinking 4 pontos — 24V CC'},
+ img:null,alt:{en:'1734-IB4 wiring',pt:'Ligação 1734-IB4'},
+ specs:{
+  en:[['Points','4 sinking inputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Filter time','0…65 ms (1 ms default)'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow per channel — input ON'],['K variant','Conformal coat']],
+  pt:[['Pontos','4 entradas sinking'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Filtro de entrada','0…65 ms (padrão 1 ms)'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo por canal — entrada ativa'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'MS Flashing Green',d:{en:'Module needs commissioning',pt:'Módulo requer comissionamento'}},
+  {code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-IB4D',fam:'point',type:'DI-DC',
+ name:{en:'4-Pt DC Sinking Input with Diagnostics — 24V DC',pt:'Entrada DC Sinking 4 pontos com Diagnósticos — 24V CC'},
+ img:null,alt:{en:'1734-IB4D wiring',pt:'Ligação 1734-IB4D'},
+ specs:{
+  en:[['Points','4 sinking inputs with per-channel diagnostics'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Diagnostics','Open-wire and short circuit per channel'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow ON / Red short / Flashing Red open-wire']],
+  pt:[['Pontos','4 entradas sinking com diagnóstico por canal'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Diagnóstico','Fio aberto e curto-circuito por canal'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo ON / Vermelho curto / Vermelho piscando fio aberto']]},
+ faults:[
+  {code:'I/O Red',d:{en:'Short circuit detected — check I/O wiring or terminal base',pt:'Curto-circuito detectado — verificar fiação ou base de terminais'}},
+  {code:'I/O Flashing Red',d:{en:'Open wire detected — check I/O wiring or terminal base',pt:'Fio aberto detectado — verificar fiação ou base de terminais'}}]},
+
+{cat:'1734-IB8 / IB8K',fam:'point',type:'DI-DC',
+ name:{en:'8-Pt DC Sinking Input — 24V DC',pt:'Entrada DC Sinking 8 pontos — 24V CC'},
+ img:null,alt:{en:'1734-IB8 wiring',pt:'Ligação 1734-IB8'},
+ specs:{
+  en:[['Points','8 sinking inputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Filter time','0…65 ms (1 ms default)'],['Wiring base','1734-TB3 or 1734-TB3S'],['LED','Yellow per channel — input ON'],['K variant','Conformal coat']],
+  pt:[['Pontos','8 entradas sinking'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Filtro de entrada','0…65 ms (padrão 1 ms)'],['Base de fiação','1734-TB3 ou 1734-TB3S'],['LED','Amarelo por canal — entrada ativa'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'MS Flashing Green',d:{en:'Module needs commissioning',pt:'Módulo requer comissionamento'}},
+  {code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power; if persists, replace',pt:'Falha recuperável — ciclar alimentação; se persistir, substituir'}}]},
+
+// ── DC SOURCING INPUTS ──
+{cat:'1734-IV2',fam:'point',type:'DI-DC',
+ name:{en:'2-Pt DC Sourcing Input — 24V DC',pt:'Entrada DC Sourcing 2 pontos — 24V CC'},
+ img:null,alt:{en:'1734-IV2 wiring',pt:'Ligação 1734-IV2'},
+ specs:{
+  en:[['Points','2 sourcing (PNP) inputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Filter time','0…65 ms (1 ms default)'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow — input ON']],
+  pt:[['Pontos','2 entradas sourcing (PNP)'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Filtro de entrada','0…65 ms (padrão 1 ms)'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo — entrada ativa']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-IV4',fam:'point',type:'DI-DC',
+ name:{en:'4-Pt DC Sourcing Input — 24V DC',pt:'Entrada DC Sourcing 4 pontos — 24V CC'},
+ img:null,alt:{en:'1734-IV4 wiring',pt:'Ligação 1734-IV4'},
+ specs:{
+  en:[['Points','4 sourcing (PNP) inputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Filter time','0…65 ms (1 ms default)'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow per channel']],
+  pt:[['Pontos','4 entradas sourcing (PNP)'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Filtro de entrada','0…65 ms (padrão 1 ms)'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo por canal']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-IV8 / IV8K',fam:'point',type:'DI-DC',
+ name:{en:'8-Pt DC Sourcing Input — 24V DC',pt:'Entrada DC Sourcing 8 pontos — 24V CC'},
+ img:null,alt:{en:'1734-IV8 wiring',pt:'Ligação 1734-IV8'},
+ specs:{
+  en:[['Points','8 sourcing (PNP) inputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Filter time','0…65 ms (1 ms default)'],['Wiring base','1734-TB3 or 1734-TB3S'],['LED','Yellow per channel'],['K variant','Conformal coat']],
+  pt:[['Pontos','8 entradas sourcing (PNP)'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Filtro de entrada','0…65 ms (padrão 1 ms)'],['Base de fiação','1734-TB3 ou 1734-TB3S'],['LED','Amarelo por canal'],['Variante K','Conformal coat']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+// ── AC INPUTS ──
+{cat:'1734-IA2',fam:'point',type:'DI-AC',
+ name:{en:'2-Pt AC Input — 120V AC',pt:'Entrada AC 2 pontos — 120V CA'},
+ img:null,alt:{en:'1734-IA2 wiring',pt:'Ligação 1734-IA2'},
+ specs:{
+  en:[['Points','2 sinking AC inputs'],['Nominal voltage','120V AC'],['Voltage range','85…132V AC'],['Frequency','47…63 Hz'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow — input ON']],
+  pt:[['Pontos','2 entradas AC sinking'],['Tensão nominal','120V CA'],['Faixa de tensão','85…132V CA'],['Frequência','47…63 Hz'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo — entrada ativa']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-IA4 / IA4K',fam:'point',type:'DI-AC',
+ name:{en:'4-Pt AC Input — 120V AC',pt:'Entrada AC 4 pontos — 120V CA'},
+ img:null,alt:{en:'1734-IA4 wiring',pt:'Ligação 1734-IA4'},
+ specs:{
+  en:[['Points','4 sinking AC inputs'],['Nominal voltage','120V AC'],['Voltage range','85…132V AC'],['Frequency','47…63 Hz'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow per channel'],['K variant','Conformal coat']],
+  pt:[['Pontos','4 entradas AC sinking'],['Tensão nominal','120V CA'],['Faixa de tensão','85…132V CA'],['Frequência','47…63 Hz'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo por canal'],['Variante K','Conformal coat']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-IM2',fam:'point',type:'DI-AC',
+ name:{en:'2-Pt AC Input — 220V AC',pt:'Entrada AC 2 pontos — 220V CA'},
+ img:null,alt:{en:'1734-IM2 wiring',pt:'Ligação 1734-IM2'},
+ specs:{
+  en:[['Points','2 sinking AC inputs'],['Nominal voltage','220V AC'],['Voltage range','159…264V AC'],['Frequency','47…63 Hz'],['Wiring base','1734-TB or 1734-TBS']],
+  pt:[['Pontos','2 entradas AC sinking'],['Tensão nominal','220V CA'],['Faixa de tensão','159…264V CA'],['Frequência','47…63 Hz'],['Base de fiação','1734-TB ou 1734-TBS']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-IM4',fam:'point',type:'DI-AC',
+ name:{en:'4-Pt AC Input — 220V AC',pt:'Entrada AC 4 pontos — 220V CA'},
+ img:null,alt:{en:'1734-IM4 wiring',pt:'Ligação 1734-IM4'},
+ specs:{
+  en:[['Points','4 sinking AC inputs'],['Nominal voltage','220V AC'],['Voltage range','159…264V AC'],['Frequency','47…63 Hz'],['Wiring base','1734-TB or 1734-TBS']],
+  pt:[['Pontos','4 entradas AC sinking'],['Tensão nominal','220V CA'],['Faixa de tensão','159…264V CA'],['Frequência','47…63 Hz'],['Base de fiação','1734-TB ou 1734-TBS']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+// ── DC SOURCING OUTPUTS (protected) ──
+{cat:'1734-OB2',fam:'point',type:'DO-DC',
+ name:{en:'2-Pt DC Sourcing Output — 24V DC',pt:'Saída DC Sourcing 2 pontos — 24V CC'},
+ img:null,alt:{en:'1734-OB2 wiring',pt:'Ligação 1734-OB2'},
+ specs:{
+  en:[['Points','2 sourcing outputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','1A'],['Fault action','Hold last state or go to safe state'],['Wiring base','1734-TB or 1734-TBS']],
+  pt:[['Pontos','2 saídas sourcing'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','1A'],['Ação em falha','Manter último estado ou ir para estado seguro'],['Base de fiação','1734-TB ou 1734-TBS']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-OB2E',fam:'point',type:'DO-DC',
+ name:{en:'2-Pt Protected DC Sourcing Output — 24V DC',pt:'Saída DC Sourcing Protegida 2 pontos — 24V CC'},
+ img:null,alt:{en:'1734-OB2E wiring',pt:'Ligação 1734-OB2E'},
+ specs:{
+  en:[['Points','2 sourcing outputs with diagnostics'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','1A'],['Diagnostics','Short circuit (On state) + open load (Off state)'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow ON / Flashing Red open / Steady Red short']],
+  pt:[['Pontos','2 saídas sourcing com diagnóstico'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','1A'],['Diagnóstico','Curto-circuito (estado On) + carga aberta (estado Off)'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo ON / Vermelho piscando carga aberta / Vermelho fixo curto']]},
+ faults:[
+  {code:'I/O Steady Red',d:{en:'Short circuit detected (On state) — remove short or overloaded circuit',pt:'Curto-circuito detectado (estado On) — remover curto ou circuito sobrecarregado'}},
+  {code:'I/O Flashing Red',d:{en:'Open circuit (no load, Off state) — connect load or disable detection',pt:'Circuito aberto (sem carga, estado Off) — conectar carga ou desabilitar detecção'}}]},
+
+{cat:'1734-OB2EP',fam:'point',type:'DO-DC',
+ name:{en:'2-Pt High-Current Protected Sourcing Output — 24V DC (2A)',pt:'Saída Sourcing Protegida Alta Corrente 2 pontos — 24V CC (2A)'},
+ img:null,alt:{en:'1734-OB2EP wiring',pt:'Ligação 1734-OB2EP'},
+ specs:{
+  en:[['Points','2 protected sourcing outputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','2A (higher current than OB2E)'],['Diagnostics','Short circuit (On state) + open load (Off state)'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow ON / Flashing Red open / Steady Red short']],
+  pt:[['Pontos','2 saídas sourcing protegidas'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','2A (corrente maior que OB2E)'],['Diagnóstico','Curto-circuito (estado On) + carga aberta (estado Off)'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo ON / Vermelho piscando carga aberta / Vermelho fixo curto']]},
+ faults:[
+  {code:'I/O Steady Red',d:{en:'Short circuit detected — remove short',pt:'Curto-circuito detectado — remover curto'}},
+  {code:'I/O Flashing Red',d:{en:'Open circuit / no load detected — connect load',pt:'Carga aberta detectada — conectar carga'}}]},
+
+{cat:'1734-OB4 / OB4K',fam:'point',type:'DO-DC',
+ name:{en:'4-Pt DC Sourcing Output — 24V DC',pt:'Saída DC Sourcing 4 pontos — 24V CC'},
+ img:null,alt:{en:'1734-OB4 wiring',pt:'Ligação 1734-OB4'},
+ specs:{
+  en:[['Points','4 sourcing outputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','1A'],['Wiring base','1734-TB or 1734-TBS'],['K variant','Conformal coat']],
+  pt:[['Pontos','4 saídas sourcing'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','1A'],['Base de fiação','1734-TB ou 1734-TBS'],['Variante K','Conformal coat']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-OB4E',fam:'point',type:'DO-DC',
+ name:{en:'4-Pt Protected DC Sourcing Output — 24V DC',pt:'Saída DC Sourcing Protegida 4 pontos — 24V CC'},
+ img:null,alt:{en:'1734-OB4E wiring',pt:'Ligação 1734-OB4E'},
+ specs:{
+  en:[['Points','4 sourcing outputs with diagnostics'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','1A'],['Diagnostics','Short circuit + open load per channel'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow / Flashing Red / Steady Red per channel']],
+  pt:[['Pontos','4 saídas sourcing com diagnóstico'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','1A'],['Diagnóstico','Curto-circuito + carga aberta por canal'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo / Vermelho piscando / Vermelho fixo por canal']]},
+ faults:[
+  {code:'I/O Steady Red',d:{en:'Short circuit — remove short or overloaded circuit',pt:'Curto-circuito — remover curto ou circuito sobrecarregado'}},
+  {code:'I/O Flashing Red',d:{en:'Open circuit / no load — connect load or disable detection',pt:'Carga aberta — conectar carga ou desabilitar detecção'}}]},
+
+{cat:'1734-OB8 / OB8K',fam:'point',type:'DO-DC',
+ name:{en:'8-Pt DC Sourcing Output — 24V DC',pt:'Saída DC Sourcing 8 pontos — 24V CC'},
+ img:null,alt:{en:'1734-OB8 wiring',pt:'Ligação 1734-OB8'},
+ specs:{
+  en:[['Points','8 sourcing outputs'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','1A'],['Wiring base','1734-TB3 or 1734-TB3S'],['K variant','Conformal coat']],
+  pt:[['Pontos','8 saídas sourcing'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','1A'],['Base de fiação','1734-TB3 ou 1734-TB3S'],['Variante K','Conformal coat']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-OB8E / OB8EK',fam:'point',type:'DO-DC',
+ name:{en:'8-Pt Protected DC Sourcing Output — 24V DC',pt:'Saída DC Sourcing Protegida 8 pontos — 24V CC'},
+ img:null,alt:{en:'1734-OB8E wiring',pt:'Ligação 1734-OB8E'},
+ specs:{
+  en:[['Points','8 sourcing outputs with diagnostics'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','1A'],['Diagnostics','Short circuit + open load per channel'],['Wiring base','1734-TB3 or 1734-TB3S'],['LED','Yellow / Flashing Red / Steady Red per channel'],['K variant','Conformal coat']],
+  pt:[['Pontos','8 saídas sourcing com diagnóstico'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','1A'],['Diagnóstico','Curto-circuito + carga aberta por canal'],['Base de fiação','1734-TB3 ou 1734-TB3S'],['LED','Amarelo / Vermelho piscando / Vermelho fixo por canal'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'I/O Steady Red',d:{en:'Short circuit detected — remove short',pt:'Curto-circuito detectado — remover curto'}},
+  {code:'I/O Flashing Red',d:{en:'Open load detected — connect load or disable detection',pt:'Carga aberta detectada — conectar carga ou desabilitar detecção'}}]},
+
+// ── DC SINKING OUTPUTS ──
+{cat:'1734-OV2E',fam:'point',type:'DO-DC',
+ name:{en:'2-Pt Protected DC Sinking Output — 24V DC',pt:'Saída DC Sinking Protegida 2 pontos — 24V CC'},
+ img:null,alt:{en:'1734-OV2E wiring',pt:'Ligação 1734-OV2E'},
+ specs:{
+  en:[['Points','2 sinking (NPN) outputs with diagnostics'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','1A'],['Diagnostics','Short circuit per channel (no open-load detection)'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow ON / Steady Red short']],
+  pt:[['Pontos','2 saídas sinking (NPN) com diagnóstico'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','1A'],['Diagnóstico','Curto-circuito por canal (sem detecção de carga aberta)'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo ON / Vermelho fixo curto']]},
+ faults:[{code:'I/O Steady Red',d:{en:'Short circuit detected — remove short',pt:'Curto-circuito detectado — remover curto'}}]},
+
+{cat:'1734-OV4E',fam:'point',type:'DO-DC',
+ name:{en:'4-Pt Protected DC Sinking Output — 24V DC',pt:'Saída DC Sinking Protegida 4 pontos — 24V CC'},
+ img:null,alt:{en:'1734-OV4E wiring',pt:'Ligação 1734-OV4E'},
+ specs:{
+  en:[['Points','4 sinking (NPN) outputs with diagnostics'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','1A'],['Diagnostics','Short circuit per channel'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow ON / Steady Red short']],
+  pt:[['Pontos','4 saídas sinking (NPN) com diagnóstico'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','1A'],['Diagnóstico','Curto-circuito por canal'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo ON / Vermelho fixo curto']]},
+ faults:[{code:'I/O Steady Red',d:{en:'Short circuit detected — remove short',pt:'Curto-circuito detectado — remover curto'}}]},
+
+{cat:'1734-OV8E / OV8EK',fam:'point',type:'DO-DC',
+ name:{en:'8-Pt Protected DC Sinking Output — 24V DC',pt:'Saída DC Sinking Protegida 8 pontos — 24V CC'},
+ img:null,alt:{en:'1734-OV8E wiring',pt:'Ligação 1734-OV8E'},
+ specs:{
+  en:[['Points','8 sinking (NPN) outputs with diagnostics'],['Nominal voltage','24V DC'],['Voltage range','10…28.8V DC'],['Current/point','1A'],['Diagnostics','Short circuit per channel (no open-load detection)'],['Wiring base','1734-TB3 or 1734-TB3S'],['LED','Yellow ON / Steady Red short'],['K variant','Conformal coat']],
+  pt:[['Pontos','8 saídas sinking (NPN) com diagnóstico'],['Tensão nominal','24V CC'],['Faixa de tensão','10…28,8V CC'],['Corrente/ponto','1A'],['Diagnóstico','Curto-circuito por canal (sem detecção carga aberta)'],['Base de fiação','1734-TB3 ou 1734-TB3S'],['LED','Amarelo ON / Vermelho fixo curto'],['Variante K','Conformal coat']]},
+ faults:[{code:'I/O Steady Red',d:{en:'Short circuit detected — remove short',pt:'Curto-circuito detectado — remover curto'}}]},
+
+// ── AC OUTPUTS ──
+{cat:'1734-OA2',fam:'point',type:'DO-AC',
+ name:{en:'2-Pt AC Output — 120/220V AC',pt:'Saída AC 2 pontos — 120/220V CA'},
+ img:null,alt:{en:'1734-OA2 wiring',pt:'Ligação 1734-OA2'},
+ specs:{
+  en:[['Points','2 AC TRIAC sourcing outputs'],['Nominal voltage','120/220V AC'],['Voltage range','74…264V AC'],['Current/point','0.75A'],['Wiring base','1734-TB or 1734-TBS']],
+  pt:[['Pontos','2 saídas TRIAC sourcing CA'],['Tensão nominal','120/220V CA'],['Faixa de tensão','74…264V CA'],['Corrente/ponto','0,75A'],['Base de fiação','1734-TB ou 1734-TBS']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-OA4 / OA4K',fam:'point',type:'DO-AC',
+ name:{en:'4-Pt AC Output — 120/220V AC',pt:'Saída AC 4 pontos — 120/220V CA'},
+ img:null,alt:{en:'1734-OA4 wiring',pt:'Ligação 1734-OA4'},
+ specs:{
+  en:[['Points','4 AC TRIAC sourcing outputs'],['Nominal voltage','120/220V AC'],['Voltage range','74…264V AC'],['Current/point','0.75A'],['Wiring base','1734-TB or 1734-TBS'],['K variant','Conformal coat']],
+  pt:[['Pontos','4 saídas TRIAC sourcing CA'],['Tensão nominal','120/220V CA'],['Faixa de tensão','74…264V CA'],['Corrente/ponto','0,75A'],['Base de fiação','1734-TB ou 1734-TBS'],['Variante K','Conformal coat']]},
+ faults:[{code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+// ── RELAY OUTPUTS ──
+{cat:'1734-OW2',fam:'point',type:'DO-Contact',
+ name:{en:'2-Pt Relay Output — Form A (NO) — 5…240V AC/DC',pt:'Saída Relé 2 pontos — Form A (NA) — 5…240V CA/CC'},
+ img:null,alt:{en:'1734-OW2 wiring',pt:'Ligação 1734-OW2'},
+ specs:{
+  en:[['Points','2 relay outputs — Type A (Normally Open)'],['Voltage','5…240V AC or DC'],['Current/point','2A (load-dependent)'],['Contact isolation','Isolated from each other'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow — output ON (coil energized)']],
+  pt:[['Pontos','2 saídas relé — Type A (Normalmente Aberto)'],['Tensão','5…240V CA ou CC'],['Corrente/ponto','2A (depende da carga)'],['Isolação dos contatos','Isolados entre si'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo — saída ON (bobina energizada)']]},
+ faults:[
+  {code:'Welded Contact',d:{en:'Contact welded by overcurrent — replace module',pt:'Contato soldado por sobrecorrente — substituir módulo'}},
+  {code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-OW4 / OW4K',fam:'point',type:'DO-Contact',
+ name:{en:'4-Pt Relay Output — Form A (NO) — 5…240V AC/DC',pt:'Saída Relé 4 pontos — Form A (NA) — 5…240V CA/CC'},
+ img:null,alt:{en:'1734-OW4 wiring',pt:'Ligação 1734-OW4'},
+ specs:{
+  en:[['Points','4 relay outputs — Type A (Normally Open)'],['Voltage','5…240V AC or DC'],['Current/point','2A (load-dependent)'],['Contact isolation','Isolated from each other'],['Wiring base','1734-TB or 1734-TBS'],['K variant','Conformal coat']],
+  pt:[['Pontos','4 saídas relé — Type A (Normalmente Aberto)'],['Tensão','5…240V CA ou CC'],['Corrente/ponto','2A (depende da carga)'],['Isolação dos contatos','Isolados entre si'],['Base de fiação','1734-TB ou 1734-TBS'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'Welded Contact',d:{en:'Contact welded by overcurrent — replace module',pt:'Contato soldado por sobrecorrente — substituir módulo'}},
+  {code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+{cat:'1734-OX2',fam:'point',type:'DO-Contact',
+ name:{en:'2-Pt Relay Output — Form C (NO+NC) — 5…240V AC/DC',pt:'Saída Relé 2 pontos — Form C (NA+NF) — 5…240V CA/CC'},
+ img:null,alt:{en:'1734-OX2 wiring',pt:'Ligação 1734-OX2'},
+ specs:{
+  en:[['Points','2 relay outputs — Type 2 Form C (NO + NC)'],['Voltage','5…240V AC or DC'],['Current/point','2A (load-dependent)'],['Contact isolation','Isolated from each other'],['Wiring base','1734-TB or 1734-TBS'],['LED','Yellow — output ON']],
+  pt:[['Pontos','2 saídas relé — Type 2 Form C (NA + NF)'],['Tensão','5…240V CA ou CC'],['Corrente/ponto','2A (depende da carga)'],['Isolação dos contatos','Isolados entre si'],['Base de fiação','1734-TB ou 1734-TBS'],['LED','Amarelo — saída ON']]},
+ faults:[
+  {code:'Welded Contact',d:{en:'Contact welded — replace module',pt:'Contato soldado — substituir módulo'}},
+  {code:'MS Flashing Red',d:{en:'Recoverable fault — cycle power',pt:'Falha recuperável — ciclar alimentação'}}]},
+
+// ── ANALOG ──
+{cat:'1734-IE2C / IE2CK',fam:'point',type:'AI',
+ name:{en:'2-Ch Analog Current Input — 4…20 mA',pt:'Entrada Analógica de Corrente 2 canais — 4…20 mA'},
+ img:null,alt:{en:'1734-IE2C wiring',pt:'Ligação 1734-IE2C'},
+ specs:{
+  en:[['Channels','2 single-ended, non-isolated inputs'],['Range','0…21 mA (default 4…20 mA)'],['Resolution','16 bits across 0…21 mA'],['Default scaling','3277 @ 4 mA low / 16383 @ 20 mA high'],['Sensor power','24V DC via V+ terminal (external source)'],['Wiring base','1734-TB or 1734-TBS'],['K variant','Conformal coat']],
+  pt:[['Canais','2 entradas single-ended não isoladas'],['Faixa','0…21 mA (padrão 4…20 mA)'],['Resolução','16 bits em 0…21 mA'],['Escalonamento padrão','3277 @ 4 mA baixo / 16383 @ 20 mA alto'],['Alimentação sensor','24V CC pelo terminal V+ (fonte externa)'],['Base de fiação','1734-TB ou 1734-TBS'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'CH Underrange',d:{en:'Current below ~3.8 mA — check sensor or open wiring',pt:'Corrente abaixo de ~3,8 mA — verificar sensor ou fiação aberta'}},
+  {code:'CH Overrange',d:{en:'Current above ~20.5 mA — check transmitter or wiring',pt:'Corrente acima de ~20,5 mA — verificar transmissor ou fiação'}},
+  {code:'CH Fault',d:{en:'Channel fault / calibration error — recalibrate or replace',pt:'Falha de canal / erro de calibração — recalibrar ou substituir'}}]},
+
+{cat:'1734-IE2V',fam:'point',type:'AI',
+ name:{en:'2-Ch Analog Voltage Input — ±10V DC',pt:'Entrada Analógica de Tensão 2 canais — ±10V CC'},
+ img:null,alt:{en:'1734-IE2V wiring',pt:'Ligação 1734-IE2V'},
+ specs:{
+  en:[['Channels','2 single-ended, non-isolated inputs'],['Range','−10…+10V DC (unipolar: 0…10V also configurable)'],['Resolution','15 bits plus sign'],['Default scaling','0 @ 0V low / 10000 @ 100V high'],['Input impedance','≥ 200 kΩ'],['Wiring base','1734-TB or 1734-TBS']],
+  pt:[['Canais','2 entradas single-ended não isoladas'],['Faixa','−10…+10V CC (unipolar: 0…10V também configurável)'],['Resolução','15 bits mais sinal'],['Escalonamento padrão','0 @ 0V baixo / 10000 @ 100V alto'],['Impedância de entrada','≥ 200 kΩ'],['Base de fiação','1734-TB ou 1734-TBS']]},
+ faults:[
+  {code:'CH Underrange',d:{en:'Voltage below configured minimum',pt:'Tensão abaixo do mínimo configurado'}},
+  {code:'CH Overrange',d:{en:'Voltage above configured maximum',pt:'Tensão acima do máximo configurado'}}]},
+
+{cat:'1734-OE2C / OE2CK',fam:'point',type:'AO',
+ name:{en:'2-Ch Analog Current Output — 4…20 mA',pt:'Saída Analógica de Corrente 2 canais — 4…20 mA'},
+ img:null,alt:{en:'1734-OE2C wiring',pt:'Ligação 1734-OE2C'},
+ specs:{
+  en:[['Channels','2 single-ended, non-isolated outputs'],['Range','0…21 mA (default 4…20 mA)'],['Resolution','13 bits across 0…21 mA'],['Diagnostics','Open-wire detection (output ON)'],['Min load resistance','0 Ω (current source)'],['Wiring base','1734-TB or 1734-TBS'],['K variant','Conformal coat']],
+  pt:[['Canais','2 saídas single-ended não isoladas'],['Faixa','0…21 mA (padrão 4…20 mA)'],['Resolução','13 bits em 0…21 mA'],['Diagnóstico','Detecção de fio aberto (saída ON)'],['Resistência mínima de carga','0 Ω (fonte de corrente)'],['Base de fiação','1734-TB ou 1734-TBS'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'Open Wire Fault',d:{en:'Open circuit detected on current output — check wiring',pt:'Circuito aberto detectado na saída de corrente — verificar fiação'}},
+  {code:'CH Fault',d:{en:'Channel fault — recalibrate or replace module',pt:'Falha de canal — recalibrar ou substituir módulo'}}]},
+
+{cat:'1734-OE2V / OE2VK',fam:'point',type:'AO',
+ name:{en:'2-Ch Analog Voltage Output — ±10V DC',pt:'Saída Analógica de Tensão 2 canais — ±10V CC'},
+ img:null,alt:{en:'1734-OE2V wiring',pt:'Ligação 1734-OE2V'},
+ specs:{
+  en:[['Channels','2 single-ended, non-isolated outputs'],['Range','−10…+10V DC (unipolar: 0…10V also configurable)'],['Resolution','14 bits'],['Diagnostics','Power fail detection'],['Min load resistance','1 kΩ'],['Wiring base','1734-TB or 1734-TBS'],['K variant','Conformal coat']],
+  pt:[['Canais','2 saídas single-ended não isoladas'],['Faixa','−10…+10V CC (unipolar: 0…10V também configurável)'],['Resolução','14 bits'],['Diagnóstico','Detecção de falha de alimentação'],['Resistência mínima de carga','1 kΩ'],['Base de fiação','1734-TB ou 1734-TBS'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'Power Fail',d:{en:'Field power failure detected — check 24V DC supply',pt:'Falha de alimentação de campo detectada — verificar fonte 24V CC'}},
+  {code:'CH Fault',d:{en:'Channel fault — recalibrate or replace module',pt:'Falha de canal — recalibrar ou substituir módulo'}}]}
+
+
+,
+// ══════════════════════════════════════════════
+// COMPACTLOGIX 1769  (manual 1769-TD006H)
+// ══════════════════════════════════════════════
+// Terminal blocks: 1769-RTBN10 (10-pin) or 1769-RTBN18 (18-pin) built-in removable
+// Wire: 22…14 AWG solid / 22…16 AWG stranded, Cu-90°C
+
+// ── AC INPUTS ──
+{cat:'1769-IA8I / IA8IK',fam:'cplx',type:'DI-AC',
+ name:{en:'8-Pt Individually Isolated 120V AC Input',pt:'Entrada CA 120V Isolada 8 pontos'},
+ img:null,alt:{en:'1769-IA8I wiring',pt:'Ligação 1769-IA8I'},
+ specs:{
+  en:[['Points','8 individually isolated inputs'],['Voltage range','79…132V AC / 47…63 Hz'],['ON current min','5 mA @ 74V AC'],['ON current max','12 mA @ 120V AC'],['Input delay ON/OFF','20 ms / 20 ms'],['Isolation','1517V AC for 1s, point-to-bus & group-to-group'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Wire size','AWG 22…14 solid / AWG 22…16 stranded']],
+  pt:[['Pontos','8 entradas individualmente isoladas'],['Faixa de tensão','79…132V CA / 47…63 Hz'],['Corrente ON mín','5 mA @ 74V CA'],['Corrente ON máx','12 mA @ 120V CA'],['Atraso ON/OFF','20 ms / 20 ms'],['Isolação','1517V CA por 1s, ponto-ao-bus e grupo-a-grupo'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Bitola do fio','AWG 22…14 maciço / AWG 22…16 flexível']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Loss of communication with controller — check bus connector and power supply',pt:'Perda de comunicação com o controlador — verificar conector de bus e fonte'}},
+  {code:'Module Fault',d:{en:'Electronic keying mismatch — verify module type in Studio 5000',pt:'Incompatibilidade de keying eletrônico — verificar tipo no Studio 5000'}}]},
+
+{cat:'1769-IA16 / IA16K',fam:'cplx',type:'DI-AC',
+ name:{en:'16-Pt 120V AC Input',pt:'Entrada CA 120V 16 pontos'},
+ img:null,alt:{en:'1769-IA16 wiring',pt:'Ligação 1769-IA16'},
+ specs:{
+  en:[['Points','16 inputs — 16 pts/group, internally connected commons'],['Voltage range','79…132V AC / 47…63 Hz'],['ON current min','5 mA @ 74V AC'],['ON current max','12 mA @ 120V AC'],['Input delay ON/OFF','20 ms / 20 ms'],['Isolation','1517V AC for 1s, point-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Wire size','AWG 22…14 solid / AWG 22…16 stranded'],['K variant','Conformal coat']],
+  pt:[['Pontos','16 entradas — 16 pts/grupo, comuns internamente conectados'],['Faixa de tensão','79…132V CA / 47…63 Hz'],['Corrente ON mín','5 mA @ 74V CA'],['Corrente ON máx','12 mA @ 120V CA'],['Atraso ON/OFF','20 ms / 20 ms'],['Isolação','1517V CA por 1s, ponto-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Bitola do fio','AWG 22…14 maciço / AWG 22…16 flexível'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss — check connector seating',pt:'Perda de comunicação no bus — verificar encaixe do conector'}}]},
+
+{cat:'1769-IM12',fam:'cplx',type:'DI-AC',
+ name:{en:'12-Pt 240V AC Input',pt:'Entrada CA 240V 12 pontos'},
+ img:null,alt:{en:'1769-IM12 wiring',pt:'Ligação 1769-IM12'},
+ specs:{
+  en:[['Points','12 inputs — 12 pts/group, internally connected commons'],['Voltage range','159…265V AC / 47…63 Hz'],['ON current min','5 mA @ 74V AC'],['Input delay ON/OFF','20 ms / 20 ms'],['Isolation','1836V AC for 1s, point-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['NOTE','Do not use NC terminals as connections']],
+  pt:[['Pontos','12 entradas — 12 pts/grupo, comuns internamente conectados'],['Faixa de tensão','159…265V CA / 47…63 Hz'],['Corrente ON mín','5 mA @ 74V CA'],['Atraso ON/OFF','20 ms / 20 ms'],['Isolação','1836V CA por 1s, ponto-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['NOTA','Não utilizar terminais NC como conexão']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss — check connector seating',pt:'Perda de comunicação no bus — verificar encaixe do conector'}}]},
+
+// ── DC INPUTS ──
+{cat:'1769-IQ16 / IQ16K',fam:'cplx',type:'DI-DC',
+ name:{en:'16-Pt 24V DC Sink/Source Input',pt:'Entrada CC 24V Sink/Source 16 pontos'},
+ img:null,alt:{en:'1769-IQ16 wiring',pt:'Ligação 1769-IQ16'},
+ specs:{
+  en:[['Points','16 inputs — 8 pts/group'],['Voltage range','10…30V DC @ 30°C / 10…26.4V DC @ 60°C'],['ON voltage min','10V DC'],['ON current min','2 mA'],['Input delay ON/OFF','8 ms / 8 ms'],['Wiring','Sinking or sourcing (per group)'],['Isolation','1200V AC for 1s, point-to-bus & group-to-group'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['K variant','Conformal coat']],
+  pt:[['Pontos','16 entradas — 8 pts/grupo'],['Faixa de tensão','10…30V CC @ 30°C / 10…26,4V CC @ 60°C'],['Tensão ON mín','10V CC'],['Corrente ON mín','2 mA'],['Atraso ON/OFF','8 ms / 8 ms'],['Ligação','Sinking ou sourcing (por grupo)'],['Isolação','1200V CA por 1s, ponto-ao-bus e grupo-a-grupo'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss — check connector seating and power supply',pt:'Perda de comunicação no bus — verificar conector e fonte de alimentação'}}]},
+
+{cat:'1769-IQ16F',fam:'cplx',type:'DI-DC',
+ name:{en:'16-Pt 24V DC Sink/Source High-Speed Input',pt:'Entrada CC 24V Sink/Source Alta Velocidade 16 pontos'},
+ img:null,alt:{en:'1769-IQ16F wiring',pt:'Ligação 1769-IQ16F'},
+ specs:{
+  en:[['Points','16 inputs — 8 pts/group'],['Voltage range','10…30V DC @ 30°C / 10…26.4V DC @ 60°C'],['Input delay OFF→ON','100 µs typical / 300 µs max'],['Input delay ON→OFF','250 µs typical / 1 ms max'],['Filter','0, 100 µs, 500 µs, 1 ms, 2 ms'],['ON current min','2 mA'],['Isolation','1200V AC for 1s'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)']],
+  pt:[['Pontos','16 entradas — 8 pts/grupo'],['Faixa de tensão','10…30V CC @ 30°C / 10…26,4V CC @ 60°C'],['Atraso OFF→ON','100 µs típico / 300 µs máx'],['Atraso ON→OFF','250 µs típico / 1 ms máx'],['Filtro','0, 100 µs, 500 µs, 1 ms, 2 ms'],['Corrente ON mín','2 mA'],['Isolação','1200V CA por 1s'],['Borne','1769-RTBN18 (removível integrado 18 pinos)']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-IQ32 / IQ32K',fam:'cplx',type:'DI-DC',
+ name:{en:'32-Pt 24V DC Sink/Source Input',pt:'Entrada CC 24V Sink/Source 32 pontos'},
+ img:null,alt:{en:'1769-IQ32 wiring',pt:'Ligação 1769-IQ32'},
+ specs:{
+  en:[['Points','32 inputs — 8 pts/group (4 groups)'],['Voltage range','10…30V DC @ 30°C / 10…26.4V DC @ 60°C'],['ON voltage min','10V DC'],['ON current min','2 mA'],['Input delay ON/OFF','8 ms / 8 ms'],['Isolation','1200V AC for 1s'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Slot width','1.5 slots'],['K variant','Conformal coat']],
+  pt:[['Pontos','32 entradas — 8 pts/grupo (4 grupos)'],['Faixa de tensão','10…30V CC @ 30°C / 10…26,4V CC @ 60°C'],['Tensão ON mín','10V CC'],['Corrente ON mín','2 mA'],['Atraso ON/OFF','8 ms / 8 ms'],['Isolação','1200V CA por 1s'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Largura','1,5 slots'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss — check connector seating',pt:'Perda de comunicação no bus — verificar conector'}}]},
+
+{cat:'1769-IQ32T',fam:'cplx',type:'DI-DC',
+ name:{en:'32-Pt 24V DC Sink/Source Terminated Input',pt:'Entrada CC 24V Sink/Source Terminada 32 pontos'},
+ img:null,alt:{en:'1769-IQ32T wiring',pt:'Ligação 1769-IQ32T'},
+ specs:{
+  en:[['Points','32 terminated inputs — 8 pts/group'],['Voltage range','20.4…26.4V DC @ 60°C'],['Input delay OFF→ON','0.1 ms typical / 0.42 ms max'],['Input delay ON→OFF','0.25 ms typical / 1.0 ms max'],['Filter','0…8 ms selectable'],['Isolation','1200V AC for 1s'],['Connector','1746-N3 replacement (1 connector, 40 terminals)'],['NOTE','Terminal blocks have integrated COM per group']],
+  pt:[['Pontos','32 entradas terminadas — 8 pts/grupo'],['Faixa de tensão','20,4…26,4V CC @ 60°C'],['Atraso OFF→ON','0,1 ms típico / 0,42 ms máx'],['Atraso ON→OFF','0,25 ms típico / 1,0 ms máx'],['Filtro','0…8 ms selecionável'],['Isolação','1200V CA por 1s'],['Conector','Substituição 1746-N3 (1 conector, 40 terminais)'],['NOTA','Bornes com COM integrado por grupo']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-IG16',fam:'cplx',type:'DI-DC',
+ name:{en:'16-Pt TTL Input — 5V DC (Low=True)',pt:'Entrada TTL 5V CC 16 pontos (Low=True)'},
+ img:null,alt:{en:'1769-IG16 wiring',pt:'Ligação 1769-IG16'},
+ specs:{
+  en:[['Points','16 TTL inputs'],['Voltage range','4.5…5.5V DC'],['ON state (low)','−0.2…0.8V DC'],['OFF state (high)','2.0…5.5V DC'],['NOTE','Inverted logic: Low = True = ON. Use NOT instruction'],['Cable','Belden 8761 shielded, max 10 m (30 ft)'],['External supply','Class 2, 4.5…5.5V DC, rated']],
+  pt:[['Pontos','16 entradas TTL'],['Faixa de tensão','4,5…5,5V CC'],['Estado ON (baixo)','−0,2…0,8V CC'],['Estado OFF (alto)','2,0…5,5V CC'],['NOTA','Lógica invertida: Low = True = ON. Usar instrução NOT'],['Cabo','Belden 8761 blindado, máx 10 m'],['Alimentação ext.','Classe 2, 4,5…5,5V CC']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Logic Inversion',d:{en:'TTL inputs are Low=True — use NOT instruction in program to convert to standard logic',pt:'Entradas TTL são Low=True — usar instrução NOT no programa para converter para lógica padrão'}}]},
+
+{cat:'1769-IQ6XOW4',fam:'cplx',type:'Mixed',
+ name:{en:'6-Pt 24V DC Input + 4-Pt AC/DC Relay Output (Combo)',pt:'6 Entradas CC 24V + 4 Saídas Relé CA/CC (Combinado)'},
+ img:null,alt:{en:'1769-IQ6XOW4 wiring',pt:'Ligação 1769-IQ6XOW4'},
+ specs:{
+  en:[['Inputs','6 × 24V DC sink/source, 10…30V DC'],['Input delay ON/OFF','8 ms / 8 ms'],['Outputs','4 × relay NO contacts, 5…265V AC / 5…125V DC'],['Current/point (out)','2.5A max'],['Current/module (out)','8A max'],['Isolation','1200V AC for 1s (input-to-bus, output-to-bus, input-to-output)'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Relay rating','240V AC: 7.5A make / 0.75A break — 125V DC: 1A make / 0.22A break']],
+  pt:[['Entradas','6 × 24V CC sink/source, 10…30V CC'],['Atraso ON/OFF entrada','8 ms / 8 ms'],['Saídas','4 × contato NA de relé, 5…265V CA / 5…125V CC'],['Corrente/ponto (saída)','2,5A máx'],['Corrente/módulo (saída)','8A máx'],['Isolação','1200V CA por 1s (entrada-ao-bus, saída-ao-bus, entrada-a-saída)'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Capacidade do relé','240V CA: 7,5A fech / 0,75A abert — 125V CC: 1A fech / 0,22A abert']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Welded Contact',d:{en:'Relay contact welded by overcurrent — replace module',pt:'Contato de relé soldado por sobrecorrente — substituir módulo'}}]},
+
+// ── AC OUTPUTS ──
+{cat:'1769-OA8',fam:'cplx',type:'DO-AC',
+ name:{en:'8-Pt 100/240V AC Solid-State Output',pt:'Saída CA 100/240V Estado Sólido 8 pontos'},
+ img:null,alt:{en:'1769-OA8 wiring',pt:'Ligação 1769-OA8'},
+ specs:{
+  en:[['Points','8 TRIAC outputs — 4 pts/group'],['Voltage range','85…265V AC / 47…63 Hz'],['Current/point max','0.25A @ 60°C / 0.5A @ 30°C'],['Current/module max','2A @ 60°C / 4A @ 30°C'],['Surge current','10A for 25 ms, repeatable every 2s'],['Leakage current','2.0 mA @ 132V AC / 2.5 mA @ 265V AC'],['Isolation','1836V AC for 1s, group-to-group'],['Terminal block','1769-RTBN10 (built-in removable 10-pin)'],['Leakage note','Use 15 kΩ/2W (120V AC) or 5 kΩ/5W (240V AC) loading resistor']],
+  pt:[['Pontos','8 saídas TRIAC — 4 pts/grupo'],['Faixa de tensão','85…265V CA / 47…63 Hz'],['Corrente/ponto máx','0,25A @ 60°C / 0,5A @ 30°C'],['Corrente/módulo máx','2A @ 60°C / 4A @ 30°C'],['Corrente de pico','10A por 25 ms, repetível a cada 2s'],['Corrente de fuga','2,0 mA @ 132V CA / 2,5 mA @ 265V CA'],['Isolação','1836V CA por 1s, grupo-a-grupo'],['Borne','1769-RTBN10 (removível integrado 10 pinos)'],['Nota de fuga','Resistor de carga: 15 kΩ/2W (120V CA) ou 5 kΩ/5W (240V CA)']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Output Overcurrent',d:{en:'TRIAC overloaded — check load and surge suppressor across inductive loads',pt:'TRIAC sobrecarregado — verificar carga e supressor de surto em cargas indutivas'}}]},
+
+{cat:'1769-OA16 / OA16K',fam:'cplx',type:'DO-AC',
+ name:{en:'16-Pt 120/240V AC Solid-State Output',pt:'Saída CA 120/240V Estado Sólido 16 pontos'},
+ img:null,alt:{en:'1769-OA16 wiring',pt:'Ligação 1769-OA16'},
+ specs:{
+  en:[['Points','16 TRIAC outputs — 8 pts/group'],['Voltage range','85…265V AC / 47…63 Hz'],['Current/point max','0.25A @ 60°C / 0.5A @ 30°C'],['Current/module max','2A @ 60°C / 4A @ 30°C'],['Surge current','5A for 25 ms, repeatable every 2s'],['Isolation','1836V AC for 1s, point-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Slot width','1.5 slots'],['K variant','Conformal coat']],
+  pt:[['Pontos','16 saídas TRIAC — 8 pts/grupo'],['Faixa de tensão','85…265V CA / 47…63 Hz'],['Corrente/ponto máx','0,25A @ 60°C / 0,5A @ 30°C'],['Corrente/módulo máx','2A @ 60°C / 4A @ 30°C'],['Corrente de pico','5A por 25 ms, repetível a cada 2s'],['Isolação','1836V CA por 1s, ponto-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Largura','1,5 slots'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Output Overcurrent',d:{en:'TRIAC overloaded — verify load and add surge suppressor',pt:'TRIAC sobrecarregado — verificar carga e adicionar supressor de surto'}}]},
+
+// ── DC OUTPUTS ──
+{cat:'1769-OB8 / OB8K',fam:'cplx',type:'DO-DC',
+ name:{en:'8-Pt 24V DC Source High-Current Output',pt:'Saída CC 24V Source Alta Corrente 8 pontos'},
+ img:null,alt:{en:'1769-OB8 wiring',pt:'Ligação 1769-OB8'},
+ specs:{
+  en:[['Points','8 sourcing outputs — 4 pts/group'],['Voltage range','20.4…26.4V DC'],['Current/point max','2.0A @ 60°C'],['Current/module max','8.0A @ 60°C'],['Surge current','4A for 10 ms, repeatable every 2s'],['Output delay ON','0.1 ms'],['Output delay OFF','1.0 ms @ 60°C max load'],['Isolation','1200V AC for 1s, point-to-bus & group-to-group'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['K variant','Conformal coat']],
+  pt:[['Pontos','8 saídas sourcing — 4 pts/grupo'],['Faixa de tensão','20,4…26,4V CC'],['Corrente/ponto máx','2,0A @ 60°C'],['Corrente/módulo máx','8,0A @ 60°C'],['Corrente de pico','4A por 10 ms, repetível a cada 2s'],['Atraso ON','0,1 ms'],['Atraso OFF','1,0 ms @ 60°C carga máxima'],['Isolação','1200V CA por 1s, ponto-ao-bus e grupo-a-grupo'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Output Overload',d:{en:'Current exceeded — verify load; use 1N4004 diode across inductive loads',pt:'Corrente excedida — verificar carga; usar diodo 1N4004 em paralelo com cargas indutivas'}}]},
+
+{cat:'1769-OB16 / OB16K',fam:'cplx',type:'DO-DC',
+ name:{en:'16-Pt 24V DC Source Output',pt:'Saída CC 24V Source 16 pontos'},
+ img:null,alt:{en:'1769-OB16 wiring',pt:'Ligação 1769-OB16'},
+ specs:{
+  en:[['Points','16 sourcing outputs — 16 pts/group'],['Voltage range','20.4…26.4V DC'],['Current/point max','0.5A @ 60°C / 1.0A @ 30°C'],['Current/module max','4.0A @ 60°C / 8.0A @ 30°C'],['Surge current','2.0A for 10 ms, repeatable every 2s'],['Output delay ON/OFF','0.1 ms / 1.0 ms'],['Isolation','1200V AC for 1s, point-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['K variant','Conformal coat']],
+  pt:[['Pontos','16 saídas sourcing — 16 pts/grupo'],['Faixa de tensão','20,4…26,4V CC'],['Corrente/ponto máx','0,5A @ 60°C / 1,0A @ 30°C'],['Corrente/módulo máx','4,0A @ 60°C / 8,0A @ 30°C'],['Corrente de pico','2,0A por 10 ms, repetível a cada 2s'],['Atraso ON/OFF','0,1 ms / 1,0 ms'],['Isolação','1200V CA por 1s, ponto-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Output Overload',d:{en:'Current exceeded — check load; use 5.6 kΩ / ½W loading resistor to limit leakage',pt:'Corrente excedida — verificar carga; usar resistor de carga 5,6 kΩ / ½W para limitar fuga'}}]},
+
+{cat:'1769-OB16P',fam:'cplx',type:'DO-DC',
+ name:{en:'16-Pt 24V DC Source Protected Output',pt:'Saída CC 24V Source Protegida 16 pontos'},
+ img:null,alt:{en:'1769-OB16P wiring',pt:'Ligação 1769-OB16P'},
+ specs:{
+  en:[['Points','16 sourcing protected outputs — 16 pts/group'],['Voltage range','20.4…26.4V DC'],['Current/point max','0.5A @ 60°C / 1.0A @ 30°C'],['Current/module max','4.0A @ 60°C / 8.0A @ 30°C'],['Protection','Electronic overcurrent protection per point'],['Surge current','2.0A for 10 ms, repeatable every 1s'],['Output delay ON/OFF','1.0 ms / 2.0 ms'],['Isolation','1200V AC for 1s'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)']],
+  pt:[['Pontos','16 saídas sourcing protegidas — 16 pts/grupo'],['Faixa de tensão','20,4…26,4V CC'],['Corrente/ponto máx','0,5A @ 60°C / 1,0A @ 30°C'],['Corrente/módulo máx','4,0A @ 60°C / 8,0A @ 30°C'],['Proteção','Proteção eletrônica contra sobrecorrente por ponto'],['Corrente de pico','2,0A por 10 ms, repetível a cada 1s'],['Atraso ON/OFF','1,0 ms / 2,0 ms'],['Isolação','1200V CA por 1s'],['Borne','1769-RTBN18 (removível integrado 18 pinos)']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Electronic Protection',d:{en:'Output protected — overcurrent or short circuit detected; check load',pt:'Proteção eletrônica atuou — sobrecorrente ou curto-circuito; verificar carga'}}]},
+
+{cat:'1769-OB32 / OB32K',fam:'cplx',type:'DO-DC',
+ name:{en:'32-Pt 24V DC Source Output',pt:'Saída CC 24V Source 32 pontos'},
+ img:null,alt:{en:'1769-OB32 wiring',pt:'Ligação 1769-OB32'},
+ specs:{
+  en:[['Points','32 sourcing outputs — 16 pts/group'],['Voltage range','20.4…26.4V DC'],['Current/point max','0.5A @ 60°C / 1.0A @ 30°C'],['Current/module max','4.0A @ 60°C / 8.0A @ 30°C'],['Surge current','2.0A for 10 ms, repeatable every 2s'],['Output delay ON/OFF','0.1 ms / 1.0 ms'],['Isolation','1200V AC for 1s'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Slot width','1.5 slots'],['K variant','Conformal coat']],
+  pt:[['Pontos','32 saídas sourcing — 16 pts/grupo'],['Faixa de tensão','20,4…26,4V CC'],['Corrente/ponto máx','0,5A @ 60°C / 1,0A @ 30°C'],['Corrente/módulo máx','4,0A @ 60°C / 8,0A @ 30°C'],['Corrente de pico','2,0A por 10 ms, repetível a cada 2s'],['Atraso ON/OFF','0,1 ms / 1,0 ms'],['Isolação','1200V CA por 1s'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Largura','1,5 slots'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-OB32T',fam:'cplx',type:'DO-DC',
+ name:{en:'32-Pt 24V DC Source Terminated Output',pt:'Saída CC 24V Source Terminada 32 pontos'},
+ img:null,alt:{en:'1769-OB32T wiring',pt:'Ligação 1769-OB32T'},
+ specs:{
+  en:[['Points','32 terminated sourcing outputs — 16 pts/group'],['Voltage range','10.2…26.4V DC'],['Current/point max','0.5A'],['Current/module max','4.0A'],['Output delay ON/OFF','0.5 ms / 4.0 ms'],['Surge current','2.0A for 10 ms, repeatable every 2s'],['Isolation','1200V AC for 2s'],['Connector','1746-N3 replacement (1 connector, 40 terminals)'],['NOTE','+VDC and DC COM duplicated per group for termination']],
+  pt:[['Pontos','32 saídas sourcing terminadas — 16 pts/grupo'],['Faixa de tensão','10,2…26,4V CC'],['Corrente/ponto máx','0,5A'],['Corrente/módulo máx','4,0A'],['Atraso ON/OFF','0,5 ms / 4,0 ms'],['Corrente de pico','2,0A por 10 ms, repetível a cada 2s'],['Isolação','1200V CA por 2s'],['Conector','Substituição 1746-N3 (1 conector, 40 terminais)'],['NOTA','+VDC e DC COM duplicados por grupo para terminação']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-OG16',fam:'cplx',type:'DO-DC',
+ name:{en:'16-Pt TTL Output — 5V DC (Low=True)',pt:'Saída TTL 5V CC 16 pontos (Low=True)'},
+ img:null,alt:{en:'1769-OG16 wiring',pt:'Ligação 1769-OG16'},
+ specs:{
+  en:[['Points','16 TTL outputs'],['Voltage range','4.5…5.5V DC'],['ON state (low)','0…0.4V DC'],['OFF state (high)','4.5…5.5V DC'],['Current/point max','24 mA'],['NOTE','Inverted logic: Low = True = ON. Use NOT instruction'],['Cable','Belden 8761 shielded, max 10 m (30 ft)'],['External supply','Class 2, 4.5…5.5V DC']],
+  pt:[['Pontos','16 saídas TTL'],['Faixa de tensão','4,5…5,5V CC'],['Estado ON (baixo)','0…0,4V CC'],['Estado OFF (alto)','4,5…5,5V CC'],['Corrente/ponto máx','24 mA'],['NOTA','Lógica invertida: Low = True = ON. Usar instrução NOT'],['Cabo','Belden 8761 blindado, máx 10 m'],['Alimentação ext.','Classe 2, 4,5…5,5V CC']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-OV16',fam:'cplx',type:'DO-DC',
+ name:{en:'16-Pt 24V DC Sink Output',pt:'Saída CC 24V Sinking 16 pontos'},
+ img:null,alt:{en:'1769-OV16 wiring',pt:'Ligação 1769-OV16'},
+ specs:{
+  en:[['Points','16 sinking (NPN) outputs — 16 pts/group'],['Voltage range','20.4…26.4V DC'],['Current/point max','0.5A @ 60°C / 1.0A @ 30°C'],['Current/module max','4.0A @ 60°C / 8.0A @ 30°C'],['Surge current','2.0A for 10 ms, repeatable every 2s'],['Output delay ON/OFF','0.1 ms / 1.0 ms'],['Isolation','1200V AC for 1s'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)']],
+  pt:[['Pontos','16 saídas sinking (NPN) — 16 pts/grupo'],['Faixa de tensão','20,4…26,4V CC'],['Corrente/ponto máx','0,5A @ 60°C / 1,0A @ 30°C'],['Corrente/módulo máx','4,0A @ 60°C / 8,0A @ 30°C'],['Corrente de pico','2,0A por 10 ms, repetível a cada 2s'],['Atraso ON/OFF','0,1 ms / 1,0 ms'],['Isolação','1200V CA por 1s'],['Borne','1769-RTBN18 (removível integrado 18 pinos)']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-OV32T',fam:'cplx',type:'DO-DC',
+ name:{en:'32-Pt 24V DC Sink Terminated Output',pt:'Saída CC 24V Sinking Terminada 32 pontos'},
+ img:null,alt:{en:'1769-OV32T wiring',pt:'Ligação 1769-OV32T'},
+ specs:{
+  en:[['Points','32 terminated sinking outputs — 16 pts/group'],['Voltage range','10.2…26.4V DC'],['Current/point max','0.5A'],['Current/module max','4.0A'],['Output delay ON/OFF','1.0…1.5 ms / 4.0 ms'],['Surge current','2.0A for 10 ms, repeatable every 2s'],['Isolation','1200V AC for 1s'],['Connector','1746-N3 replacement (1 connector, 40 terminals)']],
+  pt:[['Pontos','32 saídas sinking terminadas — 16 pts/grupo'],['Faixa de tensão','10,2…26,4V CC'],['Corrente/ponto máx','0,5A'],['Corrente/módulo máx','4,0A'],['Atraso ON/OFF','1,0…1,5 ms / 4,0 ms'],['Corrente de pico','2,0A por 10 ms, repetível a cada 2s'],['Isolação','1200V CA por 1s'],['Conector','Substituição 1746-N3 (1 conector, 40 terminais)']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+// ── RELAY OUTPUTS ──
+{cat:'1769-OW8',fam:'cplx',type:'DO-Contact',
+ name:{en:'8-Pt AC/DC Relay Contact Output',pt:'Saída Contato Relé CA/CC 8 pontos'},
+ img:null,alt:{en:'1769-OW8 wiring',pt:'Ligação 1769-OW8'},
+ specs:{
+  en:[['Points','8 normally open relay contacts — 4 pts/group'],['Voltage range','5…265V AC / 5…125V DC'],['Current/point max','2.5A'],['Current/module max','16A'],['Relay rating (240V AC)','7.5A make / 0.75A break — 1800VA make / 180VA break'],['Relay rating (125V DC)','1.0A make / 0.22A break'],['Output delay ON/OFF','10 ms / 10 ms'],['Isolation','1836V AC for 1s, point-to-bus & group-to-group'],['Terminal block','1769-RTBN10 (built-in removable 10-pin)']],
+  pt:[['Pontos','8 contatos NA de relé — 4 pts/grupo'],['Faixa de tensão','5…265V CA / 5…125V CC'],['Corrente/ponto máx','2,5A'],['Corrente/módulo máx','16A'],['Capacidade (240V CA)','7,5A fech / 0,75A abert — 1800VA fech / 180VA abert'],['Capacidade (125V CC)','1,0A fech / 0,22A abert'],['Atraso ON/OFF','10 ms / 10 ms'],['Isolação','1836V CA por 1s, ponto-ao-bus e grupo-a-grupo'],['Borne','1769-RTBN10 (removível integrado 10 pinos)']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Welded Contact',d:{en:'Contact welded by overcurrent — replace module; use surge suppressor across inductive loads',pt:'Contato soldado por sobrecorrente — substituir módulo; usar supressor de surto em cargas indutivas'}}]},
+
+{cat:'1769-OW8I / OW8IK',fam:'cplx',type:'DO-Contact',
+ name:{en:'8-Pt AC/DC Individually Isolated Relay Contact Output',pt:'Saída Contato Relé CA/CC Isolado Individual 8 pontos'},
+ img:null,alt:{en:'1769-OW8I wiring',pt:'Ligação 1769-OW8I'},
+ specs:{
+  en:[['Points','8 individually isolated normally open relay contacts'],['Voltage range','5…265V AC / 5…125V DC'],['Current/point max','2.5A'],['Current/module max','16A'],['Relay rating (240V AC)','7.5A make / 0.75A break'],['Output delay ON/OFF','10 ms / 10 ms'],['Isolation (point-to-bus)','1836V AC for 1s'],['Isolation (group-to-group)','1836V AC for 1s'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['K variant','Conformal coat']],
+  pt:[['Pontos','8 contatos NA de relé individualmente isolados'],['Faixa de tensão','5…265V CA / 5…125V CC'],['Corrente/ponto máx','2,5A'],['Corrente/módulo máx','16A'],['Capacidade (240V CA)','7,5A fech / 0,75A abert'],['Atraso ON/OFF','10 ms / 10 ms'],['Isolação (ponto-ao-bus)','1836V CA por 1s'],['Isolação (grupo-a-grupo)','1836V CA por 1s'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Welded Contact',d:{en:'Contact welded by overcurrent — replace module',pt:'Contato soldado por sobrecorrente — substituir módulo'}}]},
+
+{cat:'1769-OW16 / OW16K',fam:'cplx',type:'DO-Contact',
+ name:{en:'16-Pt AC/DC Relay Contact Output',pt:'Saída Contato Relé CA/CC 16 pontos'},
+ img:null,alt:{en:'1769-OW16 wiring',pt:'Ligação 1769-OW16'},
+ specs:{
+  en:[['Points','16 normally open relay contacts — 8 pts/group'],['Voltage range','5…265V AC / 5…125V DC'],['Current/point max','2.5A'],['Current/module max','20A'],['Relay rating (240V AC)','7.5A make / 0.75A break'],['Output delay ON/OFF','10 ms / 10 ms'],['Isolation','1836V AC for 1s, point-to-bus & group-to-group'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Slot width','1.5 slots'],['K variant','Conformal coat']],
+  pt:[['Pontos','16 contatos NA de relé — 8 pts/grupo'],['Faixa de tensão','5…265V CA / 5…125V CC'],['Corrente/ponto máx','2,5A'],['Corrente/módulo máx','20A'],['Capacidade (240V CA)','7,5A fech / 0,75A abert'],['Atraso ON/OFF','10 ms / 10 ms'],['Isolação','1836V CA por 1s, ponto-ao-bus e grupo-a-grupo'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Largura','1,5 slots'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}},
+  {code:'Welded Contact',d:{en:'Contact welded by overcurrent — replace module',pt:'Contato soldado por sobrecorrente — substituir módulo'}}]},
+
+// ── ANALOG INPUTS ──
+{cat:'1769-IF4 / IF4K',fam:'cplx',type:'AI',
+ name:{en:'4-Ch Voltage/Current Analog Input',pt:'Entrada Analógica Tensão/Corrente 4 canais'},
+ img:null,alt:{en:'1769-IF4 wiring',pt:'Ligação 1769-IF4'},
+ specs:{
+  en:[['Channels','4 differential or single-ended'],['Voltage ranges','±10V, 0…10V, 0…5V, 1…5V'],['Current ranges','0…20 mA, 4…20 mA'],['Resolution','14 bits (unipolar) / 14 bits + sign (bipolar)'],['Accuracy','Voltage: ±0.2% FS @ 25°C / Current: ±0.35% FS @ 25°C'],['Input impedance','Voltage: 220 kΩ / Current: 250 Ω'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Optional supply','External Class 2, 20.4…26.4V DC']],
+  pt:[['Canais','4 diferenciais ou single-ended'],['Faixas de tensão','±10V, 0…10V, 0…5V, 1…5V'],['Faixas de corrente','0…20 mA, 4…20 mA'],['Resolução','14 bits (unipolar) / 14 bits + sinal (bipolar)'],['Exatidão','Tensão: ±0,2% PE @ 25°C / Corrente: ±0,35% PE @ 25°C'],['Impedância de entrada','Tensão: 220 kΩ / Corrente: 250 Ω'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Alimentação opcional','Externa Classe 2, 20,4…26,4V CC']]},
+ faults:[
+  {code:'Underrange',d:{en:'Input signal below configured low scale — check sensor and wiring',pt:'Sinal abaixo da escala mínima configurada — verificar sensor e fiação'}},
+  {code:'Overrange',d:{en:'Input signal above configured high scale — check sensor',pt:'Sinal acima da escala máxima configurada — verificar sensor'}},
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-IF4I',fam:'cplx',type:'AI',
+ name:{en:'4-Ch Voltage/Current Isolated Analog Input',pt:'Entrada Analógica Tensão/Corrente Isolada 4 canais'},
+ img:null,alt:{en:'1769-IF4I wiring',pt:'Ligação 1769-IF4I'},
+ specs:{
+  en:[['Channels','4 individually isolated differential inputs'],['Voltage ranges','±10V, 0…10V, 0…5V, 1…5V'],['Current ranges','0…20 mA, 4…20 mA'],['Resolution','16 bits (unipolar) / 15 bits + sign (bipolar)'],['Accuracy','Voltage: ±0.2% FS @ 25°C / Current: ±0.35% FS @ 25°C'],['Input impedance','Voltage: 1 MΩ / Current: 249 Ω'],['Isolation','500V AC group-to-bus / 500V AC channel-to-channel (optical)'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)']],
+  pt:[['Canais','4 entradas diferenciais individualmente isoladas'],['Faixas de tensão','±10V, 0…10V, 0…5V, 1…5V'],['Faixas de corrente','0…20 mA, 4…20 mA'],['Resolução','16 bits (unipolar) / 15 bits + sinal (bipolar)'],['Exatidão','Tensão: ±0,2% PE @ 25°C / Corrente: ±0,35% PE @ 25°C'],['Impedância de entrada','Tensão: 1 MΩ / Corrente: 249 Ω'],['Isolação','500V CA grupo-ao-bus / 500V CA canal-a-canal (óptica)'],['Borne','1769-RTBN18 (removível integrado 18 pinos)']]},
+ faults:[
+  {code:'Underrange',d:{en:'Input below configured minimum',pt:'Sinal abaixo do mínimo configurado'}},
+  {code:'Overrange',d:{en:'Input above configured maximum',pt:'Sinal acima do máximo configurado'}}]},
+
+{cat:'1769-IF4XOF2 / IF4XOF2K',fam:'cplx',type:'Mixed',
+ name:{en:'4-Ch AI + 2-Ch AO Combination Analog Module',pt:'Módulo Analógico Combinado 4 EA + 2 SA'},
+ img:null,alt:{en:'1769-IF4XOF2 wiring',pt:'Ligação 1769-IF4XOF2'},
+ specs:{
+  en:[['AI channels','4 differential or single-ended (0…10V / 0…20 mA)'],['AO channels','2 single-ended (0…10V / 0…20 mA)'],['AI resolution','8 bits + sign'],['AO resolution','8 bits + sign'],['AI accuracy','Current: ±0.6% FS / Voltage: ±0.7% FS @ 25°C'],['AO accuracy','±0.5% FS @ 25°C'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['K variant','Conformal coat']],
+  pt:[['Canais AI','4 diferenciais ou single-ended (0…10V / 0…20 mA)'],['Canais AO','2 single-ended (0…10V / 0…20 mA)'],['Resolução AI','8 bits + sinal'],['Resolução AO','8 bits + sinal'],['Exatidão AI','Corrente: ±0,6% PE / Tensão: ±0,7% PE @ 25°C'],['Exatidão AO','±0,5% PE @ 25°C'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'AI Underrange/Overrange',d:{en:'Input outside configured range — check sensor',pt:'Entrada fora da faixa configurada — verificar sensor'}},
+  {code:'AO Open Wire',d:{en:'Open circuit on current output — check wiring',pt:'Circuito aberto na saída de corrente — verificar fiação'}}]},
+
+{cat:'1769-IF4FXOF2F',fam:'cplx',type:'Mixed',
+ name:{en:'4-Ch Fast AI + 2-Ch Fast AO Combination Analog Module',pt:'Módulo Analógico Combinado Rápido 4 EA + 2 SA'},
+ img:null,alt:{en:'1769-IF4FXOF2F wiring',pt:'Ligação 1769-IF4FXOF2F'},
+ specs:{
+  en:[['AI channels','4 differential or single-ended — all ranges (±10V, 0…20 mA, etc.)'],['AO channels','2 single-ended — all ranges'],['AI resolution','14 bits (unipolar) / 14 bits + sign'],['AO resolution','13 bits (unipolar) / 13 bits + sign'],['AI accuracy','Current: ±0.2% FS / Voltage: ±0.15% FS @ 25°C'],['AO accuracy','±0.2% FS @ 25°C'],['AO conversion rate','1 ms (all channels)'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)']],
+  pt:[['Canais AI','4 diferenciais ou single-ended — todas as faixas (±10V, 0…20 mA, etc.)'],['Canais AO','2 single-ended — todas as faixas'],['Resolução AI','14 bits (unipolar) / 14 bits + sinal'],['Resolução AO','13 bits (unipolar) / 13 bits + sinal'],['Exatidão AI','Corrente: ±0,2% PE / Tensão: ±0,15% PE @ 25°C'],['Exatidão AO','±0,2% PE @ 25°C'],['Taxa de conversão AO','1 ms (todos os canais)'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)']]},
+ faults:[
+  {code:'AI Underrange/Overrange',d:{en:'Input outside configured range',pt:'Entrada fora da faixa configurada'}},
+  {code:'AO Fault',d:{en:'Output fault — check load connection',pt:'Falha na saída — verificar conexão de carga'}}]},
+
+{cat:'1769-IF8 / IF8K',fam:'cplx',type:'AI',
+ name:{en:'8-Ch Voltage/Current Analog Input',pt:'Entrada Analógica Tensão/Corrente 8 canais'},
+ img:null,alt:{en:'1769-IF8 wiring',pt:'Ligação 1769-IF8'},
+ specs:{
+  en:[['Channels','8 differential or single-ended'],['Voltage ranges','±10V, 0…10V, 0…5V, 1…5V'],['Current ranges','0…20 mA, 4…20 mA'],['Resolution','16 bits (unipolar) / 15 bits + sign'],['Accuracy','Voltage: ±0.2% FS / Current: ±0.35% FS @ 25°C'],['Input impedance','Voltage: 220 kΩ / Current: 250 Ω'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Slot width','1.5 slots'],['K variant','Conformal coat']],
+  pt:[['Canais','8 diferenciais ou single-ended'],['Faixas de tensão','±10V, 0…10V, 0…5V, 1…5V'],['Faixas de corrente','0…20 mA, 4…20 mA'],['Resolução','16 bits (unipolar) / 15 bits + sinal'],['Exatidão','Tensão: ±0,2% PE / Corrente: ±0,35% PE @ 25°C'],['Impedância de entrada','Tensão: 220 kΩ / Corrente: 250 Ω'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Largura','1,5 slots'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'Underrange',d:{en:'Input below configured minimum',pt:'Sinal abaixo do mínimo configurado'}},
+  {code:'Overrange',d:{en:'Input above configured maximum',pt:'Sinal acima do máximo configurado'}}]},
+
+{cat:'1769-IF16C',fam:'cplx',type:'AI',
+ name:{en:'16-Ch Current Analog Input — 0…20 mA / 4…20 mA',pt:'Entrada Analógica de Corrente 16 canais — 0…20 mA / 4…20 mA'},
+ img:null,alt:{en:'1769-IF16C wiring',pt:'Ligação 1769-IF16C'},
+ specs:{
+  en:[['Channels','16 single-ended current inputs'],['Ranges','0…20 mA / 4…20 mA'],['Resolution','16 bits (unipolar)'],['Accuracy','±0.5% FS @ 25°C'],['Input impedance','249 Ω'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Sensor supply','External Class 2 power supply required']],
+  pt:[['Canais','16 entradas de corrente single-ended'],['Faixas','0…20 mA / 4…20 mA'],['Resolução','16 bits (unipolar)'],['Exatidão','±0,5% PE @ 25°C'],['Impedância de entrada','249 Ω'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Alimentação sensor','Fonte externa Classe 2 necessária']]},
+ faults:[
+  {code:'Underrange',d:{en:'Current below configured minimum — check sensor and loop power',pt:'Corrente abaixo do mínimo configurado — verificar sensor e alimentação de loop'}},
+  {code:'Overrange',d:{en:'Current above configured maximum',pt:'Corrente acima do máximo configurado'}}]},
+
+{cat:'1769-IF16V',fam:'cplx',type:'AI',
+ name:{en:'16-Ch Voltage Analog Input — ±10V / 0…10V',pt:'Entrada Analógica de Tensão 16 canais — ±10V / 0…10V'},
+ img:null,alt:{en:'1769-IF16V wiring',pt:'Ligação 1769-IF16V'},
+ specs:{
+  en:[['Channels','16 single-ended voltage inputs'],['Ranges','±10V, 0…10V, 0…5V, 1…5V'],['Resolution','16 bits (unipolar) / 15 bits + sign'],['Accuracy','±0.35% FS @ 25°C'],['Input impedance','> 1 MΩ'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Sensor supply','External Class 2 power supply required']],
+  pt:[['Canais','16 entradas de tensão single-ended'],['Faixas','±10V, 0…10V, 0…5V, 1…5V'],['Resolução','16 bits (unipolar) / 15 bits + sinal'],['Exatidão','±0,35% PE @ 25°C'],['Impedância de entrada','> 1 MΩ'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Alimentação sensor','Fonte externa Classe 2 necessária']]},
+ faults:[
+  {code:'Underrange',d:{en:'Voltage below configured minimum',pt:'Tensão abaixo do mínimo configurado'}},
+  {code:'Overrange',d:{en:'Voltage above configured maximum',pt:'Tensão acima do máximo configurado'}}]},
+
+{cat:'1769-IR6',fam:'cplx',type:'AI',
+ name:{en:'6-Ch RTD/Resistance Input',pt:'Entrada RTD/Resistência 6 canais'},
+ img:null,alt:{en:'1769-IR6 wiring',pt:'Ligação 1769-IR6'},
+ specs:{
+  en:[['Channels','6 RTD/resistance inputs'],['Resistance ranges','0…150 Ω, 0…500 Ω, 0…1000 Ω, 0…3000 Ω'],['RTDs supported','Pt385 (100…1000 Ω), Pt3916 (100…1000 Ω), Ni618, Ni672 (120 Ω), NiFe518 (604 Ω), Cu426 (10 Ω)'],['Temp range (Pt385)','−200…+850°C'],['Accuracy @ 25°C (Pt385)','±0.5°C'],['Wiring','2-wire (add jumper), 3-wire, or 4-wire (leave one open)'],['Recommended cable','2-wire: Belden 9501 / 3-wire: Belden 9533 / 4-wire: Belden 83503'],['Isolation','720V DC for 1 min, channel-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)']],
+  pt:[['Canais','6 entradas RTD/resistência'],['Faixas de resistência','0…150 Ω, 0…500 Ω, 0…1000 Ω, 0…3000 Ω'],['RTDs suportados','Pt385 (100…1000 Ω), Pt3916 (100…1000 Ω), Ni618, Ni672 (120 Ω), NiFe518 (604 Ω), Cu426 (10 Ω)'],['Faixa de temp (Pt385)','−200…+850°C'],['Exatidão @ 25°C (Pt385)','±0,5°C'],['Ligação','2 fios (adicionar jumper), 3 fios, ou 4 fios (deixar um aberto)'],['Cabo recomendado','2 fios: Belden 9501 / 3 fios: Belden 9533 / 4 fios: Belden 83503'],['Isolação','720V CC por 1 min, canal-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)']]},
+ faults:[
+  {code:'Open Circuit',d:{en:'RTD wire break detected — check sensor wiring and connections',pt:'Fio aberto de RTD detectado — verificar fiação e conexões do sensor'}},
+  {code:'Underrange/Overrange',d:{en:'Resistance outside configured range — check sensor type and wiring',pt:'Resistência fora da faixa configurada — verificar tipo e fiação do sensor'}}]},
+
+{cat:'1769-IT6',fam:'cplx',type:'AI',
+ name:{en:'6-Ch Thermocouple/mV Input',pt:'Entrada Termopar/mV 6 canais'},
+ img:null,alt:{en:'1769-IT6 wiring',pt:'Ligação 1769-IT6'},
+ specs:{
+  en:[['Channels','6 thermocouple inputs + 2 CJC sensors'],['TC types supported','J, K, T, E, R, S, B, N, C'],['mV ranges','±50 mV, ±100 mV'],['Accuracy (Type J @ 25°C)','±0.6°C'],['CJC accuracy','±1.0°C'],['Open-circuit detection','7 ms…2.1 s (configurable)'],['Isolation','720V DC for 1 min, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['NOTE','Install at least 2 slots away from AC power supplies']],
+  pt:[['Canais','6 entradas de termopar + 2 sensores CJC'],['Tipos TC suportados','J, K, T, E, R, S, B, N, C'],['Faixas em mV','±50 mV, ±100 mV'],['Exatidão (Tipo J @ 25°C)','±0,6°C'],['Exatidão CJC','±1,0°C'],['Detecção de fio aberto','7 ms…2,1 s (configurável)'],['Isolação','720V CC por 1 min, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['NOTA','Instalar pelo menos 2 slots distante das fontes CA']]},
+ faults:[
+  {code:'Open Circuit',d:{en:'Thermocouple wire broken — check sensor connections',pt:'Fio de termopar quebrado — verificar conexões do sensor'}},
+  {code:'CJC Fault',d:{en:'Cold junction compensation error — check module temperature environment',pt:'Erro de compensação de junção fria — verificar temperatura do ambiente do módulo'}}]},
+
+// ── ANALOG OUTPUTS ──
+{cat:'1769-OF2 / OF2K',fam:'cplx',type:'AO',
+ name:{en:'2-Ch Voltage/Current Analog Output',pt:'Saída Analógica Tensão/Corrente 2 canais'},
+ img:null,alt:{en:'1769-OF2 wiring',pt:'Ligação 1769-OF2'},
+ specs:{
+  en:[['Channels','2 single-ended outputs'],['Voltage ranges','±10V, 0…10V, 0…5V, 1…5V'],['Current ranges','0…20 mA, 4…20 mA'],['Resolution','14 bits (unipolar) / 14 bits + sign'],['Accuracy','Voltage: ±0.5% FS / Current: ±0.35% FS @ 25°C'],['Resistive load (I)','0…500 Ω (includes wire resistance)'],['Open/short protection','Yes — short max 21 mA'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['K variant','Conformal coat']],
+  pt:[['Canais','2 saídas single-ended'],['Faixas de tensão','±10V, 0…10V, 0…5V, 1…5V'],['Faixas de corrente','0…20 mA, 4…20 mA'],['Resolução','14 bits (unipolar) / 14 bits + sinal'],['Exatidão','Tensão: ±0,5% PE / Corrente: ±0,35% PE @ 25°C'],['Carga resistiva (I)','0…500 Ω (inclui resistência do cabo)'],['Proteção curto/aberto','Sim — curto máx 21 mA'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'Open Wire (I mode)',d:{en:'Open circuit detected on current output — check load connection',pt:'Circuito aberto na saída de corrente — verificar conexão de carga'}},
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-OF4 / OF4K',fam:'cplx',type:'AO',
+ name:{en:'4-Ch Voltage/Current Analog Output',pt:'Saída Analógica Tensão/Corrente 4 canais'},
+ img:null,alt:{en:'1769-OF4 wiring',pt:'Ligação 1769-OF4'},
+ specs:{
+  en:[['Channels','4 single-ended outputs'],['Voltage ranges','±10V, 0…10V, 0…5V, 1…5V'],['Current ranges','0…20 mA, 4…20 mA'],['Resolution','15 bits + sign (unipolar and bipolar)'],['Accuracy','0.5% FS @ 25°C'],['Resistive load (I)','0…600 Ω'],['Open/short protection','Yes — short max 40 mA'],['Isolation','510V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['K variant','Conformal coat']],
+  pt:[['Canais','4 saídas single-ended'],['Faixas de tensão','±10V, 0…10V, 0…5V, 1…5V'],['Faixas de corrente','0…20 mA, 4…20 mA'],['Resolução','15 bits + sinal (unipolar e bipolar)'],['Exatidão','0,5% PE @ 25°C'],['Carga resistiva (I)','0…600 Ω'],['Proteção curto/aberto','Sim — curto máx 40 mA'],['Isolação','510V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-OF4CI',fam:'cplx',type:'AO',
+ name:{en:'4-Ch Isolated Current Analog Output — 0…20 mA',pt:'Saída Analógica de Corrente Isolada 4 canais — 0…20 mA'},
+ img:null,alt:{en:'1769-OF4CI wiring',pt:'Ligação 1769-OF4CI'},
+ specs:{
+  en:[['Channels','4 individually isolated differential current outputs'],['Ranges','0…20 mA / 4…20 mA'],['Resolution','16 bits (unipolar)'],['Accuracy','±0.35% FS @ 25°C'],['Resistive load','0…500 Ω'],['Open/short protection','Yes — short max 21 mA'],['Isolation','500V AC, group-to-bus & channel-to-channel'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['K variant','Conformal coat']],
+  pt:[['Canais','4 saídas de corrente diferencial individualmente isoladas'],['Faixas','0…20 mA / 4…20 mA'],['Resolução','16 bits (unipolar)'],['Exatidão','±0,35% PE @ 25°C'],['Carga resistiva','0…500 Ω'],['Proteção curto/aberto','Sim — curto máx 21 mA'],['Isolação','500V CA, grupo-ao-bus e canal-a-canal'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Variante K','Conformal coat']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-OF4VI',fam:'cplx',type:'AO',
+ name:{en:'4-Ch Isolated Voltage Analog Output — ±10V / 0…10V',pt:'Saída Analógica de Tensão Isolada 4 canais — ±10V / 0…10V'},
+ img:null,alt:{en:'1769-OF4VI wiring',pt:'Ligação 1769-OF4VI'},
+ specs:{
+  en:[['Channels','4 individually isolated differential voltage outputs'],['Ranges','±10V, 0…10V, 0…5V, 1…5V DC'],['Resolution','15 bits + sign'],['Accuracy','±0.5% FS @ 25°C'],['Load current max','5 mA'],['Load resistance min','≥ 2 kΩ'],['Open/short protection','Yes — short max 35…42 mA'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)']],
+  pt:[['Canais','4 saídas de tensão diferencial individualmente isoladas'],['Faixas','±10V, 0…10V, 0…5V, 1…5V CC'],['Resolução','15 bits + sinal'],['Exatidão','±0,5% PE @ 25°C'],['Corrente de carga máx','5 mA'],['Resistência de carga mín','≥ 2 kΩ'],['Proteção curto/aberto','Sim — curto máx 35…42 mA'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-OF8C',fam:'cplx',type:'AO',
+ name:{en:'8-Ch Current Analog Output — 0…20 mA / 4…20 mA',pt:'Saída Analógica de Corrente 8 canais — 0…20 mA / 4…20 mA'},
+ img:null,alt:{en:'1769-OF8C wiring',pt:'Ligação 1769-OF8C'},
+ specs:{
+  en:[['Channels','8 single-ended current outputs'],['Ranges','0…20 mA / 4…20 mA'],['Resolution','16 bits (unipolar)'],['Accuracy','±0.35% FS @ 25°C'],['Resistive load','0…500 Ω'],['Open/short protection','Yes — short max 21 mA'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Optional supply','External Class 2, 20.4…26.4V DC']],
+  pt:[['Canais','8 saídas de corrente single-ended'],['Faixas','0…20 mA / 4…20 mA'],['Resolução','16 bits (unipolar)'],['Exatidão','±0,35% PE @ 25°C'],['Carga resistiva','0…500 Ω'],['Proteção curto/aberto','Sim — curto máx 21 mA'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Alimentação opcional','Externa Classe 2, 20,4…26,4V CC']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]},
+
+{cat:'1769-OF8V',fam:'cplx',type:'AO',
+ name:{en:'8-Ch Voltage Analog Output — ±10V / 0…10V',pt:'Saída Analógica de Tensão 8 canais — ±10V / 0…10V'},
+ img:null,alt:{en:'1769-OF8V wiring',pt:'Ligação 1769-OF8V'},
+ specs:{
+  en:[['Channels','8 single-ended voltage outputs'],['Ranges','±10V, 0…10V, 0…5V, 1…5V'],['Resolution','16 bits + sign'],['Accuracy','±0.5% FS @ 25°C'],['Load current max','10 mA'],['Load resistance min','> 1 kΩ'],['Open/short protection','Yes — short max 30 mA'],['Isolation','500V AC, group-to-bus'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['Optional supply','External Class 2, 20.4…26.4V DC']],
+  pt:[['Canais','8 saídas de tensão single-ended'],['Faixas','±10V, 0…10V, 0…5V, 1…5V'],['Resolução','16 bits + sinal'],['Exatidão','±0,5% PE @ 25°C'],['Corrente de carga máx','10 mA'],['Resistência de carga mín','> 1 kΩ'],['Proteção curto/aberto','Sim — curto máx 30 mA'],['Isolação','500V CA, grupo-ao-bus'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Alimentação opcional','Externa Classe 2, 20,4…26,4V CC']]},
+ faults:[
+  {code:'COMM FAULT',d:{en:'Bus communication loss',pt:'Perda de comunicação no bus'}}]}
+
+]; // end DB
+
+// ─── DARK MODE ────────────────────────────────
+function applyDark(v) {
+  document.documentElement.setAttribute('data-theme', v ? 'dark' : '');
+  document.getElementById('dark-lbl').textContent = v ? T[lang].darkOff : T[lang].darkOn;
+}
+function toggleDark() {
+  dark = !dark;
+  applyDark(dark);
+  prefs.dark = dark; savePrefs(prefs);
+}
+
+// ─── LANGUAGE ─────────────────────────────────
+function applyLang() {
+  var t = T[lang];
+  document.getElementById('ui-title').textContent = t.title;
+  document.getElementById('ui-sub').textContent   = t.sub;
+  document.getElementById('btn-lang').textContent = t.langBtn;
+  document.getElementById('dark-lbl').textContent = dark ? t.darkOff : t.darkOn;
+  document.getElementById('ui-slbl').textContent  = t.slbl;
+  document.getElementById('srch').placeholder     = t.sph;
+  document.getElementById('ui-flbl').textContent  = t.flbl;
+  document.getElementById('ui-tlbl').textContent  = t.tlbl;
+  document.getElementById('opt-all-fam').textContent  = t.fall;
+  document.getElementById('opt-all-type').textContent = t.tall;
+  document.getElementById('lb-hint').textContent  = t.lbHint;
+  document.getElementById('lb-cls-lbl').textContent   = t.lbClose;
+  // modal texts
+  document.getElementById('modal-sub-txt').innerHTML = t.mSub;
+  document.getElementById('ml-ver').textContent   = t.mVer;
+  document.getElementById('ml-cache').textContent = t.mCache;
+  document.getElementById('ml-modules').textContent  = t.mMod;
+  document.getElementById('ml-fam').textContent   = t.mFam;
+  document.getElementById('ml-src').textContent   = t.mSrc;
+  document.getElementById('ml-dev').textContent   = t.mDev;
+  document.getElementById('ml-pwa').textContent   = t.mPwa;
+  document.getElementById('modal-foot').textContent  = t.mFoot;
+}
+function toggleLang() {
+  lang = lang === 'en' ? 'pt' : 'en';
+  prefs.lang = lang; savePrefs(prefs);
+  applyLang();
+  doFilter();
+}
+
+// ─── ABOUT MODAL ──────────────────────────────
+function openAbout() {
+  // Read version from sw.js cache name (injected at build, here static)
+  document.getElementById('mv-ver').textContent   = APP_VERSION;
+  document.getElementById('mv-cache').textContent = APP_VERSION;
+  document.getElementById('mv-modules').textContent = DB.length + ' modules';
+  document.getElementById('ml-fam-val').textContent = 'ControlLogix 1756 · POINT I/O 1734 · CompactLogix 1769';
+  document.getElementById('mv-pwa').textContent   = 'GitHub Pages';
+  document.getElementById('aboutModal').classList.add('open');
+}
+function closeAbout() { document.getElementById('aboutModal').classList.remove('open'); }
+document.getElementById('aboutModal').addEventListener('click', function(e){ if(e.target===this) closeAbout(); });
+
+// ─── RENDER ───────────────────────────────────
+function svgPlaceholder() {
+  return '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+}
+
+var _obsRegistry = [,
+// ══════════════════════════════════════════════
+// FLEX I/O 1794 — DIGITAL DC INPUTS (manual 1794-SG002I-EN-P)
+// Stage 1: original schema
+// ══════════════════════════════════════════════
+{"cat":"1794-IB8","fam":"flex","type":"DI-DC","name":{"en":"8-Pt DC Sinking Input — 10…31.2V DC","pt":"Entrada DC Sinking 8 pontos — 10…31,2V CC"},"img":null,"alt":{"en":"1794-IB8 wiring","pt":"Ligação 1794-IB8"},"specs":{"en":[["Points","8 inputs"],["Voltage range","10…31.2V DC"],["Input type","Sinking"],["ON current nom","8 mA @ 24V DC"],["ON current max","11 mA"],["OFF current max","1.5 mA"],["Input impedance","4.6 kΩ"],["Terminal base","1794-TB3 / TB3S / TB3K / TB3SK"],["Operating temp","-20…+55 °C"]],"pt":[["Pontos","8 entradas"],["Faixa de tensão","10…31,2V CC"],["Tipo de entrada","Sinking"],["Corrente ON nominal","8 mA @ 24V CC"],["Corrente ON máx","11 mA"],["Corrente OFF máx","1,5 mA"],["Impedância de entrada","4,6 kΩ"],["Base terminal","1794-TB3 / TB3S / TB3K / TB3SK"],["Temperatura operação","-20…+55 °C"]]},"faults":[{"code":"No Input","d":{"en":"Check field DC supply, common return and terminal base wiring.","pt":"Verificar fonte CC de campo, comum de retorno e fiação da base terminal."}},{"code":"COMM FAULT","d":{"en":"Adapter/FLEXBus communication fault — check adapter, slot and module seating.","pt":"Falha de comunicação adaptador/FLEXBus — verificar adaptador, slot e encaixe do módulo."}},{"code":"Wrong Module","d":{"en":"Verify terminal base keying and configured module profile.","pt":"Verificar chaveamento da base terminal e perfil configurado do módulo."}}]},
+{"cat":"1794-IB16 / IB16XT","fam":"flex","type":"DI-DC","name":{"en":"16-Pt DC Sinking Input — 10…31.2V DC","pt":"Entrada DC Sinking 16 pontos — 10…31,2V CC"},"img":null,"alt":{"en":"1794-IB16 / IB16XT wiring","pt":"Ligação 1794-IB16 / IB16XT"},"specs":{"en":[["Points","16 inputs"],["Voltage range","10…31.2V DC"],["Input type","Sinking"],["ON current nom","8 mA @ 24V DC"],["ON current max","IB16: 12 mA; IB16XT: 5 mA"],["OFF current max","1.5 mA"],["Input impedance","4.6 kΩ"],["Terminal base","1794-TB3 / TB3S / TB3K / TB3SK"],["Operating temp","IB16: -20…+55 °C; IB16XT: -20…+70 °C"],["Variant","IB16XT = extended temperature / conformal coated"]],"pt":[["Pontos","16 entradas"],["Faixa de tensão","10…31,2V CC"],["Tipo de entrada","Sinking"],["Corrente ON nominal","8 mA @ 24V CC"],["Corrente ON máx","IB16: 12 mA; IB16XT: 5 mA"],["Corrente OFF máx","1,5 mA"],["Impedância de entrada","4,6 kΩ"],["Base terminal","1794-TB3 / TB3S / TB3K / TB3SK"],["Temperatura operação","IB16: -20…+55 °C; IB16XT: -20…+70 °C"],["Variante","IB16XT = temperatura estendida / conformal coated"]]},"faults":[{"code":"No Input","d":{"en":"Check field DC supply, common return and terminal base wiring.","pt":"Verificar fonte CC de campo, comum de retorno e fiação da base terminal."}},{"code":"COMM FAULT","d":{"en":"Adapter/FLEXBus communication fault — check adapter, slot and module seating.","pt":"Falha de comunicação adaptador/FLEXBus — verificar adaptador, slot e encaixe do módulo."}},{"code":"Wrong Module","d":{"en":"Verify terminal base keying and configured module profile.","pt":"Verificar chaveamento da base terminal e perfil configurado do módulo."}}]},
+{"cat":"1794-IB16D / IB16DK","fam":"flex","type":"DI-DC","name":{"en":"16-Pt Diagnostic DC Sinking Input — 10…31.2V DC","pt":"Entrada DC Sinking Diagnóstica 16 pontos — 10…31,2V CC"},"img":null,"alt":{"en":"1794-IB16D / IB16DK wiring","pt":"Ligação 1794-IB16D / IB16DK"},"specs":{"en":[["Points","16 diagnostic inputs"],["Voltage range","10…31.2V DC"],["Input type","Sinking"],["ON current nom","8.2 mA @ 24V DC"],["ON current max","12.1 mA @ 31.2V DC"],["OFF current max","1.5 mA"],["Input impedance","3.1 kΩ"],["Terminal base","1794-TB32 / TB32S"],["Operating temp","0…55 °C"],["Variant","IB16DK = conformal coated; diagnostics: open wire, short circuit, reverse polarity"]],"pt":[["Pontos","16 entradas diagnósticas"],["Faixa de tensão","10…31,2V CC"],["Tipo de entrada","Sinking"],["Corrente ON nominal","8,2 mA @ 24V CC"],["Corrente ON máx","12,1 mA @ 31,2V CC"],["Corrente OFF máx","1,5 mA"],["Impedância de entrada","3,1 kΩ"],["Base terminal","1794-TB32 / TB32S"],["Temperatura operação","0…55 °C"],["Variante","IB16DK = conformal coated; diagnósticos: fio aberto, curto, polaridade reversa"]]},"faults":[{"code":"Module Fault","d":{"en":"Diagnostic module fault — check channel diagnostic bits and module status LED.","pt":"Falha em módulo diagnóstico — verificar bits de diagnóstico do canal e LED de status."}},{"code":"Open Wire","d":{"en":"Possible open wire or field device fault.","pt":"Possível fio aberto ou falha no dispositivo de campo."}},{"code":"Reverse Polarity","d":{"en":"Check external power supply polarity on terminal base.","pt":"Verificar polaridade da fonte externa na base terminal."}}]},
+{"cat":"1794-IB32 / IB32K","fam":"flex","type":"DI-DC","name":{"en":"32-Pt DC Sinking Input — 10…31.2V DC","pt":"Entrada DC Sinking 32 pontos — 10…31,2V CC"},"img":null,"alt":{"en":"1794-IB32 / IB32K wiring","pt":"Ligação 1794-IB32 / IB32K"},"specs":{"en":[["Points","32 inputs"],["Voltage range","10…31.2V DC"],["Input type","Sinking"],["ON current nom","8 mA @ 24V DC"],["ON current max","6 mA"],["OFF current max","1.5 mA"],["Input impedance","6 kΩ"],["Terminal base","1794-TB32 / TB32S"],["Operating temp","-20…+55 °C"],["Variant","IB32K = conformal coated"]],"pt":[["Pontos","32 entradas"],["Faixa de tensão","10…31,2V CC"],["Tipo de entrada","Sinking"],["Corrente ON nominal","8 mA @ 24V CC"],["Corrente ON máx","6 mA"],["Corrente OFF máx","1,5 mA"],["Impedância de entrada","6 kΩ"],["Base terminal","1794-TB32 / TB32S"],["Temperatura operação","-20…+55 °C"],["Variante","IB32K = conformal coated"]]},"faults":[{"code":"No Input","d":{"en":"Check field DC supply, common return and terminal base wiring.","pt":"Verificar fonte CC de campo, comum de retorno e fiação da base terminal."}},{"code":"COMM FAULT","d":{"en":"Adapter/FLEXBus communication fault — check adapter, slot and module seating.","pt":"Falha de comunicação adaptador/FLEXBus — verificar adaptador, slot e encaixe do módulo."}},{"code":"Wrong Module","d":{"en":"Verify terminal base keying and configured module profile.","pt":"Verificar chaveamento da base terminal e perfil configurado do módulo."}}]},
+{"cat":"1794-IV16","fam":"flex","type":"DI-DC","name":{"en":"16-Pt DC Sourcing Input — 10…31.2V DC","pt":"Entrada DC Sourcing 16 pontos — 10…31,2V CC"},"img":null,"alt":{"en":"1794-IV16 wiring","pt":"Ligação 1794-IV16"},"specs":{"en":[["Points","16 inputs"],["Voltage range","10…31.2V DC"],["Input type","Sourcing"],["ON current nom","4.1 mA @ 24V DC"],["ON current max","11 mA"],["OFF current max","1.5 mA"],["Input impedance","4.7 kΩ"],["Terminal base","1794-TB3 / TB3S / TB3K / TB3SK"],["Operating temp","0…55 °C"]],"pt":[["Pontos","16 entradas"],["Faixa de tensão","10…31,2V CC"],["Tipo de entrada","Sourcing"],["Corrente ON nominal","4,1 mA @ 24V CC"],["Corrente ON máx","11 mA"],["Corrente OFF máx","1,5 mA"],["Impedância de entrada","4,7 kΩ"],["Base terminal","1794-TB3 / TB3S / TB3K / TB3SK"],["Temperatura operação","0…55 °C"]]},"faults":[{"code":"No Input","d":{"en":"Check field DC supply, common return and terminal base wiring.","pt":"Verificar fonte CC de campo, comum de retorno e fiação da base terminal."}},{"code":"COMM FAULT","d":{"en":"Adapter/FLEXBus communication fault — check adapter, slot and module seating.","pt":"Falha de comunicação adaptador/FLEXBus — verificar adaptador, slot e encaixe do módulo."}},{"code":"Wrong Module","d":{"en":"Verify terminal base keying and configured module profile.","pt":"Verificar chaveamento da base terminal e perfil configurado do módulo."}}]},
+{"cat":"1794-IV32","fam":"flex","type":"DI-DC","name":{"en":"32-Pt DC Sourcing Input — 19.2…31.2V DC","pt":"Entrada DC Sourcing 32 pontos — 19,2…31,2V CC"},"img":null,"alt":{"en":"1794-IV32 wiring","pt":"Ligação 1794-IV32"},"specs":{"en":[["Points","32 inputs"],["Voltage range","19.2…31.2V DC"],["Input type","Sourcing"],["ON current nom","4.1 mA @ 24V DC"],["ON current max","6 mA"],["OFF current max","1.5 mA"],["Input impedance","11 kΩ"],["Terminal base","1794-TB32 / TB32S"],["Operating temp","0…55 °C"]],"pt":[["Pontos","32 entradas"],["Faixa de tensão","19,2…31,2V CC"],["Tipo de entrada","Sourcing"],["Corrente ON nominal","4,1 mA @ 24V CC"],["Corrente ON máx","6 mA"],["Corrente OFF máx","1,5 mA"],["Impedância de entrada","11 kΩ"],["Base terminal","1794-TB32 / TB32S"],["Temperatura operação","0…55 °C"]]},"faults":[{"code":"No Input","d":{"en":"Check field DC supply, common return and terminal base wiring.","pt":"Verificar fonte CC de campo, comum de retorno e fiação da base terminal."}},{"code":"COMM FAULT","d":{"en":"Adapter/FLEXBus communication fault — check adapter, slot and module seating.","pt":"Falha de comunicação adaptador/FLEXBus — verificar adaptador, slot e encaixe do módulo."}},{"code":"Wrong Module","d":{"en":"Verify terminal base keying and configured module profile.","pt":"Verificar chaveamento da base terminal e perfil configurado do módulo."}}]},
+{"cat":"1794-IC16","fam":"flex","type":"DI-DC","name":{"en":"16-Pt DC Sinking Input — 30…60V DC","pt":"Entrada DC Sinking 16 pontos — 30…60V CC"},"img":null,"alt":{"en":"1794-IC16 wiring","pt":"Ligação 1794-IC16"},"specs":{"en":[["Points","16 inputs"],["Voltage range","30…60V DC"],["Input type","Sinking"],["ON current nom","5 mA @ 48V DC"],["ON current max","11 mA"],["OFF current max","4.1 mA"],["Input impedance","—"],["Terminal base","1794-TB3 / TB3S / TB3K / TB3SK"],["Operating temp","0…55 °C"]],"pt":[["Pontos","16 entradas"],["Faixa de tensão","30…60V CC"],["Tipo de entrada","Sinking"],["Corrente ON nominal","5 mA @ 48V CC"],["Corrente ON máx","11 mA"],["Corrente OFF máx","4,1 mA"],["Impedância de entrada","—"],["Base terminal","1794-TB3 / TB3S / TB3K / TB3SK"],["Temperatura operação","0…55 °C"]]},"faults":[{"code":"No Input","d":{"en":"Check field DC supply, common return and terminal base wiring.","pt":"Verificar fonte CC de campo, comum de retorno e fiação da base terminal."}},{"code":"COMM FAULT","d":{"en":"Adapter/FLEXBus communication fault — check adapter, slot and module seating.","pt":"Falha de comunicação adaptador/FLEXBus — verificar adaptador, slot e encaixe do módulo."}},{"code":"Wrong Module","d":{"en":"Verify terminal base keying and configured module profile.","pt":"Verificar chaveamento da base terminal e perfil configurado do módulo."}}]},
+{"cat":"1794-IG16","fam":"flex","type":"DI-DC","name":{"en":"16-Pt TTL Input — 5V DC","pt":"Entrada TTL 16 pontos — 5V CC"},"img":null,"alt":{"en":"1794-IG16 wiring","pt":"Ligação 1794-IG16"},"specs":{"en":[["Points","16 inputs"],["Voltage range","-0.2…0.8V DC ON level"],["Input type","TTL"],["ON current nom","—"],["ON current max","3 mA"],["OFF current max","0.8 mA"],["Input impedance","60 kΩ"],["Terminal base","1794-TB3 / TB3S / TB3K / TB3SK"],["Operating temp","0…55 °C"]],"pt":[["Pontos","16 entradas"],["Faixa de tensão","-0,2…0,8V CC nível ON"],["Tipo de entrada","TTL"],["Corrente ON nominal","—"],["Corrente ON máx","3 mA"],["Corrente OFF máx","0,8 mA"],["Impedância de entrada","60 kΩ"],["Base terminal","1794-TB3 / TB3S / TB3K / TB3SK"],["Temperatura operação","0…55 °C"]]},"faults":[{"code":"No Input","d":{"en":"Check field DC supply, common return and terminal base wiring.","pt":"Verificar fonte CC de campo, comum de retorno e fiação da base terminal."}},{"code":"COMM FAULT","d":{"en":"Adapter/FLEXBus communication fault — check adapter, slot and module seating.","pt":"Falha de comunicação adaptador/FLEXBus — verificar adaptador, slot e encaixe do módulo."}},{"code":"Wrong Module","d":{"en":"Verify terminal base keying and configured module profile.","pt":"Verificar chaveamento da base terminal e perfil configurado do módulo."}}]},
+{"cat":"1794-IH16","fam":"flex","type":"DI-DC","name":{"en":"16-Pt DC Sinking Input — 90…146V DC","pt":"Entrada DC Sinking 16 pontos — 90…146V CC"},"img":null,"alt":{"en":"1794-IH16 wiring","pt":"Ligação 1794-IH16"},"specs":{"en":[["Points","16 inputs"],["Voltage range","90…146V DC"],["Input type","Sinking"],["ON current nom","2 mA @ 125V DC"],["ON current max","3 mA"],["OFF current max","0.8 mA"],["Input impedance","—"],["Terminal base","1794-TB3 / TB3S / TB3K / TB3SK"],["Operating temp","0…55 °C"]],"pt":[["Pontos","16 entradas"],["Faixa de tensão","90…146V CC"],["Tipo de entrada","Sinking"],["Corrente ON nominal","2 mA @ 125V CC"],["Corrente ON máx","3 mA"],["Corrente OFF máx","0,8 mA"],["Impedância de entrada","—"],["Base terminal","1794-TB3 / TB3S / TB3K / TB3SK"],["Temperatura operação","0…55 °C"]]},"faults":[{"code":"No Input","d":{"en":"Check field DC supply, common return and terminal base wiring.","pt":"Verificar fonte CC de campo, comum de retorno e fiação da base terminal."}},{"code":"COMM FAULT","d":{"en":"Adapter/FLEXBus communication fault — check adapter, slot and module seating.","pt":"Falha de comunicação adaptador/FLEXBus — verificar adaptador, slot e encaixe do módulo."}},{"code":"Wrong Module","d":{"en":"Verify terminal base keying and configured module profile.","pt":"Verificar chaveamento da base terminal e perfil configurado do módulo."}}]}
+];
+function renderCards(data) {
+  _obsRegistry = [];
+  var grid = document.getElementById('ioGrid');
+  grid.innerHTML = '';
+  var t = T[lang];
+  if (!data.length) { grid.innerHTML = '<div class="no-res">' + t.noRes + '</div>'; return; }
+
+  data.forEach(function(item) {
+    var fam  = FAM[item.fam] || {label: item.fam};
+    var card = document.createElement('div');
+    card.className = 'card';
+
+    var isObs = fam.obs === true;
+    var imgBlock;
+    if (item.img) {
+      var cap = t.imgCap + item.cat;
+      var alt = item.alt[lang];
+      imgBlock =
+        '<div class="img-wrap">' +
+          '<img src="' + item.img + '" alt="' + alt + '" loading="lazy">' +
+          '<button class="btn-fs" data-src="' + item.img + '" data-alt="' + alt + '" data-cap="' + cap + '">' +
+            '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>' +
+            t.fsBtn +
+          '</button>' +
+        '</div>' +
+        '<div class="img-caption">' + cap + '</div>';
+    } else {
+      imgBlock =
+        '<div class="img-wrap"><div class="img-placeholder">' + svgPlaceholder() + '<span>' + t.noImg + '</span></div></div>';
+    }
+    // Obsolete wiring pages button
+    var obsBlock = '';
+    if (isObs) {
+      obsBlock =
+        '<button class="btn-obs" data-obs-idx="' + _obsRegistry.length + '">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+          '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
+          '<polyline points="14 2 14 8 20 8"/>' +
+          '<line x1="16" y1="13" x2="8" y2="13"/>' +
+          '<line x1="16" y1="17" x2="8" y2="17"/>' +
+          '<polyline points="10 9 9 9 8 9"/></svg>' +
+          t.obsBtn +
+        '</button>';
+      _obsRegistry.push({cat: item.cat, pages: item.wiringPages||[]});
+    }
+
+    var specRows = item.specs[lang].map(function(r){
+      return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+    }).join('');
+
+    var fRows = item.faults.map(function(f){
+      return '<div class="fault-row"><span class="f-badge">' + f.code + '</span><span>' + f.d[lang] + '</span></div>';
+    }).join('');
+
+    var lifeBadge = lifecycleBadgeHtml(item, fam);
+
+
+    card.innerHTML =
+      '<div class="card-body">' +
+        '<div class="card-header">' +
+          '<span class="mod-code">' + item.cat + '</span>' +
+          '<span class="fam-tag ' + tagCls(item.type) + '">' + fam.label + '</span>' +
+        '</div>' +
+        lifeBadge +
+        '<div class="mod-name">' + item.name[lang] + '</div>' +
+        '<span class="mod-badge">' + item.type + '</span>' +
+        imgBlock +
+        obsBlock +
+        '<div class="sec-div">' + t.specSec + '</div>' +
+        '<table class="specs-tbl">' + specRows + '</table>' +
+        '<div class="faults-ttl">&#9888; ' + t.faultSec + '</div>' +
+        fRows +
+      '</div>';
+
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('.btn-fs').forEach(function(btn) {
+    btn.addEventListener('click', function(){ lbOpen(btn.dataset.src, btn.dataset.alt, btn.dataset.cap); });
+  });
+  grid.querySelectorAll('.btn-obs').forEach(function(btn) {
+    btn.addEventListener('click', function(){
+      var entry = _obsRegistry[parseInt(btn.dataset.obsIdx,10)];
+      if(!entry) return;
+      var pages = entry.pages && entry.pages.length ? entry.pages :
+        [{src:'images/'+entry.cat.replace(/[^a-zA-Z0-9-]/g,'-')+'-p1.png', alt:entry.cat+' wiring p.1'}];
+      lbOpen(pages[0].src, pages[0].alt, entry.cat + ' — Wiring Pages', pages);
+    });
+  });
+}
+
+// ─── FILTER ───────────────────────────────────
+function doFilter() {
+  var s  = document.getElementById('srch').value.toLowerCase();
+  var fv = document.getElementById('fFam').value;
+  var tv = document.getElementById('fType').value;
+  var r  = DB.filter(function(item) {
+    var mF = fv==='all' || item.fam===fv;
+    var mT = tv==='all' || item.type===tv;
+    var mS = !s || item.cat.toLowerCase().includes(s) ||
+      item.name[lang].toLowerCase().includes(s) ||
+      item.specs[lang].some(function(x){ return x[0].toLowerCase().includes(s)||x[1].toLowerCase().includes(s); }) ||
+      item.faults.some(function(f){ return f.code.toLowerCase().includes(s)||f.d[lang].toLowerCase().includes(s); });
+    return mF && mT && mS;
+  });
+  renderCards(r);
+}
+
+// ─── LIGHTBOX ─────────────────────────────────
+var lb={sc:1,mn:.1,mx:12,tx:0,ty:0,drag:false,sx:0,sy:0,stx:0,sty:0,pin:null,ht:null};
+// Multi-page support
+var lbPages=[];
+var lbPageIdx=0;
+function lbSetPage(idx){
+  lbPageIdx=idx;
+  var img=document.getElementById('lb-img');
+  img.src=lbPages[idx].src;
+  img.alt=lbPages[idx].alt||'';
+  document.getElementById('lb-page-info').textContent=(idx+1)+' / '+lbPages.length;
+  img.onload=lbFit;
+  if(img.complete&&img.naturalWidth) lbFit();
+}
+function lbShowPageCtrls(){
+  var ctrls=document.getElementById('lb-page-ctrls');
+  ctrls.style.display=lbPages.length>1?'flex':'none';
+}
+
+function lbOpen(src,alt,cap){
+  var el=document.getElementById('lightbox');
+  var img=document.getElementById('lb-img');
+  document.getElementById('lb-ttl').textContent=cap||alt;
+  img.alt=alt; img.src=src;
+  el.classList.add('open');
+  document.body.style.overflow='hidden';
+  img.onload=lbFit;
+  if(img.complete&&img.naturalWidth) lbFit();
+  var h=document.getElementById('lb-hint');
+  h.classList.remove('hide');
+  clearTimeout(lb.ht);
+  lb.ht=setTimeout(function(){h.classList.add('hide');},3500);
+}
+function lbClose(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';document.getElementById('lb-img').src='';}
+function lbFit(){
+  var vp=document.getElementById('lb-vp');
+  var img=document.getElementById('lb-img');
+  var vW=vp.clientWidth,vH=vp.clientHeight;
+  var iW=img.naturalWidth||vW,iH=img.naturalHeight||vH;
+  lb.sc=Math.min(vW/iW,vH/iH,1);
+  lb.tx=(vW-iW*lb.sc)/2;
+  lb.ty=(vH-iH*lb.sc)/2;
+  lbApply();
+}
+function lbZStep(d){var vp=document.getElementById('lb-vp');lbZAt(lb.sc+d,vp.clientWidth/2,vp.clientHeight/2);}
+function lbZAt(ns,cx,cy){ns=Math.min(Math.max(ns,lb.mn),lb.mx);var r=ns/lb.sc;lb.tx=cx-r*(cx-lb.tx);lb.ty=cy-r*(cy-lb.ty);lb.sc=ns;lbApply();}
+function lbApply(){var img=document.getElementById('lb-img');img.style.transform='translate('+lb.tx+'px,'+lb.ty+'px) scale('+lb.sc+')';document.getElementById('lb-pct').textContent=Math.round(lb.sc*100)+'%';}
+
+document.getElementById('lb-in').addEventListener('click',function(){lbZStep(.25);});
+document.getElementById('lb-out').addEventListener('click',function(){lbZStep(-.25);});
+document.getElementById('lb-rst').addEventListener('click',lbFit);
+document.getElementById('lb-cls').addEventListener('click',lbClose);
+
+var _vp=document.getElementById('lb-vp');
+_vp.addEventListener('mousedown',function(e){if(e.button!==0)return;lb.drag=true;lb.sx=e.clientX;lb.sy=e.clientY;lb.stx=lb.tx;lb.sty=lb.ty;_vp.classList.add('grab');e.preventDefault();});
+window.addEventListener('mousemove',function(e){if(!lb.drag)return;lb.tx=lb.stx+(e.clientX-lb.sx);lb.ty=lb.sty+(e.clientY-lb.sy);lbApply();});
+window.addEventListener('mouseup',function(){lb.drag=false;_vp.classList.remove('grab');});
+_vp.addEventListener('wheel',function(e){e.preventDefault();var r=_vp.getBoundingClientRect();lbZAt(lb.sc+(e.deltaY<0?.15:-.15),e.clientX-r.left,e.clientY-r.top);},{passive:false});
+_vp.addEventListener('dblclick',function(e){var r=_vp.getBoundingClientRect();if(lb.sc>1.2)lbFit();else lbZAt(2.5,e.clientX-r.left,e.clientY-r.top);});
+_vp.addEventListener('touchstart',function(e){if(e.touches.length===1){lb.drag=true;lb.sx=e.touches[0].clientX;lb.sy=e.touches[0].clientY;lb.stx=lb.tx;lb.sty=lb.ty;lb.pin=null;}else if(e.touches.length===2){lb.drag=false;lb.pin=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}e.preventDefault();},{passive:false});
+_vp.addEventListener('touchmove',function(e){e.preventDefault();if(e.touches.length===1&&lb.drag){lb.tx=lb.stx+(e.touches[0].clientX-lb.sx);lb.ty=lb.sty+(e.touches[0].clientY-lb.sy);lbApply();}else if(e.touches.length===2){var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(lb.pin){var r=_vp.getBoundingClientRect();lbZAt(lb.sc*(d/lb.pin),((e.touches[0].clientX+e.touches[1].clientX)/2)-r.left,((e.touches[0].clientY+e.touches[1].clientY)/2)-r.top);}lb.pin=d;}},{passive:false});
+_vp.addEventListener('touchend',function(){lb.drag=false;lb.pin=null;});
+document.addEventListener('keydown',function(e){if(!document.getElementById('lightbox').classList.contains('open'))return;if(e.key==='Escape')lbClose();if(e.key==='+'||e.key==='=')lbZStep(.25);if(e.key==='-')lbZStep(-.25);if(e.key==='0')lbFit();});
+
+// ─── SERVICE WORKER ───────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
+
+// ─── INIT ─────────────────────────────────────
+window.onload = function() {
+  applyDark(dark);
+  applyLang();
+  console.log('ABIO_STAGE1_1794_DC_INPUTS', DB.filter(function(x){return x.fam==='flex';}).length);
+  renderCards(DB);
+};
+</script>
+</body>
+</html>

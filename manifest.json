@@ -1,0 +1,16 @@
+{
+  "name": "Rockwell I/O Reference Central",
+  "short_name": "RA IO",
+  "description": "Referência técnica de módulos de I/O Rockwell Automation",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f4f5f6",
+  "theme_color": "#2d3142",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/vhmol1/ABIO/refs/heads/main/Logo_IO.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
