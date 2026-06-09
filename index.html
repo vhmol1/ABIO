@@ -1631,6 +1631,15 @@ document.getElementById('lb-in').addEventListener('click',function(){lbZStep(.25
 document.getElementById('lb-out').addEventListener('click',function(){lbZStep(-.25);});
 document.getElementById('lb-rst').addEventListener('click',lbFit);
 document.getElementById('lb-cls').addEventListener('click',lbClose);
+ // Ativa o botão de voltar a página
+document.getElementById('lb-prev').addEventListener('click', function(){
+  if(lbPages.length > 1 && lbPageIdx > 0) lbSetPage(lbPageIdx - 1);
+});
+
+// Ativa o botão de avançar a página
+document.getElementById('lb-next').addEventListener('click', function(){
+  if(lbPages.length > 1 && lbPageIdx < lbPages.length - 1) lbSetPage(lbPageIdx + 1);
+});
 
 var _vp=document.getElementById('lb-vp');
 _vp.addEventListener('mousedown',function(e){if(e.button!==0)return;lb.drag=true;lb.sx=e.clientX;lb.sy=e.clientY;lb.stx=lb.tx;lb.sty=lb.ty;_vp.classList.add('grab');e.preventDefault();});
