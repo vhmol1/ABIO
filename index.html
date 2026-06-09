@@ -1056,7 +1056,11 @@ var DB = [
 // ── DC INPUTS ──
 {cat:'1769-IQ16 / IQ16K',fam:'cplx',type:'DI-DC',
  name:{en:'16-Pt 24V DC Sink/Source Input',pt:'Entrada CC 24V Sink/Source 16 pontos'},
- img:null,alt:{en:'1769-IQ16 wiring',pt:'Ligação 1769-IQ16'},
+ wiringPages:[
+    {src:'imagens/1769-IQ16.jpg', alt:'Wiring p.1'},
+    {src:'imagens/5069-IB16.jpg', alt:'Wiring p.2'}
+  ],
+ img:"imagens/1769-IQ16.jpg",alt:{en:'1769-IQ16 wiring',pt:'Ligação 1769-IQ16'},
  specs:{
   en:[['Points','16 inputs — 8 pts/group'],['Voltage range','10…30V DC @ 30°C / 10…26.4V DC @ 60°C'],['ON voltage min','10V DC'],['ON current min','2 mA'],['Input delay ON/OFF','8 ms / 8 ms'],['Wiring','Sinking or sourcing (per group)'],['Isolation','1200V AC for 1s, point-to-bus & group-to-group'],['Terminal block','1769-RTBN18 (built-in removable 18-pin)'],['K variant','Conformal coat']],
   pt:[['Pontos','16 entradas — 8 pts/grupo'],['Faixa de tensão','10…30V CC @ 30°C / 10…26,4V CC @ 60°C'],['Tensão ON mín','10V CC'],['Corrente ON mín','2 mA'],['Atraso ON/OFF','8 ms / 8 ms'],['Ligação','Sinking ou sourcing (por grupo)'],['Isolação','1200V CA por 1s, ponto-ao-bus e grupo-a-grupo'],['Borne','1769-RTBN18 (removível integrado 18 pinos)'],['Variante K','Conformal coat']]},
